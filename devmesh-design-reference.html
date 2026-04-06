@@ -43,21 +43,47 @@
   .app-body { display:flex; flex:1; overflow:hidden; }
 
   /* Sidebar — frosted glass with SVG icons */
-  .sidebar { width:200px; background:rgba(244,244,244,0.75); backdrop-filter:saturate(180%) blur(20px); -webkit-backdrop-filter:saturate(180%) blur(20px); border-right:0.5px solid rgba(0,0,0,0.1); display:flex; flex-direction:column; flex-shrink:0; padding:4px 0; user-select:none; }
-  .sb-section { font-size:11px; font-weight:600; color:#86868B; padding:12px 16px 4px; }
-  .sb-item { display:flex; align-items:center; height:26px; padding:0 12px; gap:7px; font-size:13px; color:#1D1D1F; cursor:pointer; border-radius:5px; margin:0 8px 1px; transition:background 0.1s; }
+  .sidebar { width:210px; background:rgba(244,244,244,0.75); backdrop-filter:saturate(180%) blur(20px); -webkit-backdrop-filter:saturate(180%) blur(20px); border-right:0.5px solid rgba(0,0,0,0.1); display:flex; flex-direction:column; flex-shrink:0; padding:8px 0; user-select:none; }
+  .sb-section { font-size:10px; font-weight:600; color:#A0A0A8; padding:16px 20px 6px; text-transform:uppercase; letter-spacing:0.8px; }
+  .sb-item { display:flex; align-items:center; height:28px; padding:0 12px; gap:8px; font-size:13px; color:#1D1D1F; cursor:pointer; border-radius:6px; margin:0 8px 1px; transition:all 0.12s; }
   .sb-item:hover { background:rgba(0,0,0,0.04); }
-  .sb-item.active { background:rgba(0,122,255,0.12); color:#007AFF; }
-  .sb-icon { width:18px; height:18px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .sb-item.active { background:rgba(0,122,255,0.1); color:#007AFF; }
+  .sb-icon { width:20px; height:20px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
   .sb-icon svg { width:16px; height:16px; }
-  .sb-label { flex:1; font-size:13px; }
-  .sb-status { width:7px; height:7px; border-radius:50%; flex-shrink:0; }
+  .sb-label { flex:1; font-size:13px; font-weight:400; }
+  .sb-status { width:8px; height:8px; border-radius:50%; flex-shrink:0; margin-left:4px; }
   .sb-online { background:#34C759; animation:status-pulse 2s ease-in-out infinite; }
   .sb-offline { background:#C7C7CC; }
-  .sb-meta { font-size:10px; color:#86868B; margin-left:auto; }
-  .sb-bottom { margin-top:auto; padding:8px 16px 12px; }
-  .sb-link { font-size:12px; color:#007AFF; cursor:pointer; display:flex; align-items:center; gap:4px; }
+  .sb-meta { font-size:10px; color:#A0A0A8; margin-left:auto; }
+  .sb-bottom { margin-top:auto; padding:12px 20px 16px; }
+  .sb-link { font-size:12px; color:#007AFF; cursor:pointer; display:flex; align-items:center; gap:5px; font-weight:500; }
   .sb-link:hover { text-decoration:underline; }
+  /* This machine (hero device) */
+  .sb-this-machine { padding:10px 12px; height:auto; margin-bottom:2px; }
+  .sb-this-machine .sb-label { font-size:13px; font-weight:600; }
+  .sb-this-label { font-size:10px; color:#86868B; margin-top:2px; letter-spacing:0.2px; }
+
+  /* Remote device metadata line */
+  .sb-device-meta { font-size:10px; color:#86868B; margin-top:2px; letter-spacing:0.2px; }
+
+  /* Remote device items — taller for two-line content */
+  .sb-item-device { height:auto; padding:7px 12px; margin-bottom:2px; }
+  .sb-item-device .sb-label { font-size:13px; }
+
+  /* Pinned paths under this machine */
+  .sb-pinned { padding:0 0 8px 0; border-bottom:0.5px solid rgba(0,0,0,0.05); margin:0 16px 8px; }
+  .sb-pin-item { display:flex; align-items:center; height:24px; padding:0 0 0 20px; gap:6px; font-size:12px; color:#64646D; cursor:pointer; border-radius:4px; }
+  .sb-pin-item:hover { background:rgba(0,0,0,0.04); color:#1D1D1F; }
+  .sb-pin-star { color:#C7C7CC; font-size:9px; width:12px; text-align:center; }
+  .sb-pin-item:hover .sb-pin-star { color:#FF9500; }
+
+  /* Section dividers */
+  .sb-divider { height:0.5px; background:rgba(0,0,0,0.06); margin:10px 20px; }
+
+  /* Packs toggle */
+  .sb-packs-toggle { color:#86868B; font-size:12px; }
+  .sb-packs-toggle .sb-label { font-weight:500; }
+  .sb-packs-toggle .sb-meta { font-size:10px; color:#C7C7CC; }
 
   /* Main content */
   .main { flex:1; display:flex; flex-direction:column; background:#fff; }
@@ -256,6 +282,9 @@
         <button class="tb-view-item">⫿</button>
         <button class="tb-view-item">⊟</button>
       </div>
+      <div style="display:flex;background:rgba(0,0,0,0.06);border-radius:6px;padding:2px;gap:1px;">
+        <button style="padding:3px 10px;border:none;background:#fff;border-radius:4px;font-size:11px;color:#1D1D1F;cursor:pointer;font-family:inherit;box-shadow:0 0.5px 2px rgba(0,0,0,0.1);">Send to... ▾</button>
+      </div>
       <button class="tb-icon-btn">↑</button>
       <button class="tb-icon-btn">⋯</button>
       <div class="search-wrap"><input class="tb-search" type="text" placeholder="Search"></div>
@@ -263,17 +292,41 @@
   </div>
   <div class="app-body">
     <div class="sidebar">
-      <div class="sb-section">Favorites</div>
-      <div class="sb-item"><div class="sb-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" class="icon-blue"><circle cx="8" cy="8" r="1.5"/><path d="M8 2v3M8 11v3M2 8h3M11 8h3M3.8 3.8l2.1 2.1M10.1 10.1l2.1 2.1M3.8 12.2l2.1-2.1M10.1 5.9l2.1-2.1"/></svg></div><span class="sb-label">Recents</span></div>
-      <div class="sb-item"><div class="sb-icon"><svg viewBox="0 0 16 16" fill="currentColor" class="icon-blue"><rect x="2" y="3" width="12" height="10" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.2"/><rect x="4" y="6" width="8" height="4" rx="0.5"/></svg></div><span class="sb-label">Desktop</span></div>
-      <div class="sb-item"><div class="sb-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2" class="icon-blue"><path d="M2 5h12v8H2z" rx="1"/><path d="M2 5l2-3h8l2 3"/></svg></div><span class="sb-label">Documents</span></div>
-      <div class="sb-item"><div class="sb-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2" class="icon-blue"><path d="M8 2v8M5 7l3 3 3-3"/><path d="M3 11v2h10v-2"/></svg></div><span class="sb-label">Downloads</span></div>
-
-      <div class="sb-section">Devices</div>
-      <div class="sb-item active"><div class="sb-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="2" y="3" width="12" height="8" rx="1.5"/><path d="M5 13h6"/><path d="M8 11v2"/></svg></div><span class="sb-label">MacBook Pro</span><span class="sb-status sb-online"></span></div>
-      <div class="sb-item"><div class="sb-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="3" y="2" width="10" height="9" rx="1.5"/><path d="M6 13h4"/><path d="M8 11v2"/></svg></div><span class="sb-label">Mac Mini</span><span class="sb-status sb-online"></span></div>
-      <div class="sb-item"><div class="sb-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="3" y="3" width="10" height="10" rx="1.5"/><path d="M3 10h10"/></svg></div><span class="sb-label">ThinkPad</span><span class="sb-meta">2h ago</span><span class="sb-status sb-offline"></span></div>
-
+      <div class="sb-item sb-this-machine active">
+        <div class="sb-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="2" y="3" width="12" height="8" rx="1.5"/><path d="M5 13h6"/><path d="M8 11v2"/></svg></div>
+        <div style="flex:1">
+          <span class="sb-label">MacBook Pro</span>
+          <div class="sb-this-label">this machine</div>
+        </div>
+        <span class="sb-status sb-online"></span>
+      </div>
+      <div class="sb-pinned">
+        <div class="sb-pin-item"><span class="sb-pin-star">★</span>Home</div>
+        <div class="sb-pin-item"><span class="sb-pin-star">★</span>Desktop</div>
+        <div class="sb-pin-item"><span class="sb-pin-star">★</span>.claude</div>
+      </div>
+      <div class="sb-item sb-item-device">
+        <div class="sb-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="3" y="2" width="10" height="9" rx="1.5"/><path d="M6 13h4"/><path d="M8 11v2"/></svg></div>
+        <div style="flex:1">
+          <span class="sb-label">Mac Mini</span>
+          <div class="sb-device-meta">studio · <span style="color:#34C759">Full</span></div>
+        </div>
+        <span class="sb-status sb-online"></span>
+      </div>
+      <div class="sb-item sb-item-device">
+        <div class="sb-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="3" y="3" width="10" height="10" rx="1.5"/><path d="M3 10h10"/></svg></div>
+        <div style="flex:1">
+          <span class="sb-label">ThinkPad</span>
+          <div class="sb-device-meta">travel · <span style="color:#FF9500">Read</span> · 2h ago</div>
+        </div>
+        <span class="sb-status sb-offline"></span>
+      </div>
+      <div class="sb-divider"></div>
+      <div class="sb-item sb-packs-toggle">
+        <span class="sb-label" style="color:#A0A0A8">▸ Packs</span>
+        <span class="sb-meta">(3)</span>
+      </div>
+      <div class="sb-divider"></div>
       <div class="sb-bottom"><span class="sb-link"><svg viewBox="0 0 12 12" width="11" height="11" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="6" y1="2" x2="6" y2="10"/><line x1="2" y1="6" x2="10" y2="6"/></svg> Link Device</span></div>
     </div>
     <div class="main">
@@ -289,7 +342,7 @@
         <div class="fl-row"><div class="fl-name"><svg viewBox="0 0 16 16" class="icon-config"><rect x="3" y="1.5" width="10" height="13" rx="1.5" fill="none" stroke="currentColor" stroke-width="1"/><text x="8" y="10.5" text-anchor="middle" font-size="6" font-weight="600" fill="currentColor">{}</text></svg>credentials.json</div><div class="fl-meta">Mar 20, 11:28 AM</div><div class="fl-meta">512 B</div><div class="fl-meta">JSON</div></div>
         <div class="fl-row"><div class="fl-name"><svg viewBox="0 0 16 16" class="icon-config"><rect x="3" y="1.5" width="10" height="13" rx="1.5" fill="none" stroke="currentColor" stroke-width="1"/><text x="8" y="10.5" text-anchor="middle" font-size="6" font-weight="600" fill="currentColor">{}</text></svg>projects.json</div><div class="fl-meta">Apr 1, 12:47 PM</div><div class="fl-meta">3.1 KB</div><div class="fl-meta">JSON</div></div>
       </div>
-      <div class="fl-status">8 items, 12.1 KB</div>
+      <div class="fl-status">8 items, 12.1 KB · Right-click for more actions · Drag to sidebar to copy</div>
     </div>
   </div>
 </div>
@@ -407,10 +460,14 @@
   </div>
   <div class="app-body" style="position:relative">
     <div class="sidebar" style="opacity:0.35">
-      <div class="sb-section">Favorites</div>
-      <div class="sb-item"><div class="sb-icon"><svg viewBox="0 0 16 16" fill="currentColor" class="icon-blue"><rect x="2" y="3" width="12" height="10" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.2"/></svg></div><span class="sb-label">Desktop</span></div>
-      <div class="sb-section">Devices</div>
-      <div class="sb-item active"><div class="sb-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="2" y="3" width="12" height="8" rx="1.5"/></svg></div><span class="sb-label">MacBook Pro</span></div>
+      <div class="sb-item sb-this-machine active">
+        <div class="sb-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="2" y="3" width="12" height="8" rx="1.5"/><path d="M5 13h6"/><path d="M8 11v2"/></svg></div>
+        <div style="flex:1">
+          <span class="sb-label">MacBook Pro</span>
+          <div class="sb-this-label">this machine</div>
+        </div>
+        <span class="sb-status sb-online"></span>
+      </div>
     </div>
     <div class="main" style="opacity:0.35"><div class="path-bar"><span class="current">.claude</span></div><div style="flex:1"></div><div class="fl-status">8 items</div></div>
     <div class="sheet-overlay">
@@ -467,9 +524,108 @@
               <div class="pin-digit">6</div>
             </div>
           </div>
-          <p style="text-align:center;font-size:11px;color:#86868B;margin-bottom:14px;">Enter this on your other device · expires in 4:32</p>
+          <p style="text-align:center;font-size:11px;color:#86868B;margin-bottom:14px;">Open DevMesh on your other machine and enter this PIN · expires in 4:32</p>
 
-          <div class="sheet-sep" style="margin:10px 0;">or enter their PIN</div>
+          <div class="sheet-sep" style="margin:10px 0;">or enter their PIN here</div>
+
+          <div class="pin-digits" style="margin-bottom:12px;">
+            <div class="pin-input-group">
+              <input class="pin-input" type="text" maxlength="1" placeholder="·">
+              <input class="pin-input" type="text" maxlength="1" placeholder="·">
+              <input class="pin-input" type="text" maxlength="1" placeholder="·">
+            </div>
+            <div class="pin-spacer">·</div>
+            <div class="pin-input-group">
+              <input class="pin-input" type="text" maxlength="1" placeholder="·">
+              <input class="pin-input" type="text" maxlength="1" placeholder="·">
+              <input class="pin-input" type="text" maxlength="1" placeholder="·">
+            </div>
+          </div>
+
+          <div class="sheet-btns">
+            <button class="sheet-btn sheet-btn-cancel">Cancel</button>
+            <button class="sheet-btn sheet-btn-primary">Connect</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- ===================== SCREEN 2a-alt: PAIRING EMPTY STATE ===================== -->
+<p class="section-title">Screen 2a-alt</p>
+<p class="section-subtitle">Pairing — Empty State (no devices found)</p>
+
+<div class="window" style="position:relative">
+  <div class="titlebar">
+    <div class="traffic-lights"><span class="tl-red"></span><span class="tl-yellow"></span><span class="tl-green"></span></div>
+    <div class="titlebar-center"><div class="titlebar-title">DevMesh</div></div>
+  </div>
+  <div class="app-body" style="position:relative">
+    <div class="sidebar" style="opacity:0.35">
+      <div class="sb-item sb-this-machine active">
+        <div class="sb-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="2" y="3" width="12" height="8" rx="1.5"/><path d="M5 13h6"/><path d="M8 11v2"/></svg></div>
+        <div style="flex:1">
+          <span class="sb-label">MacBook Pro</span>
+          <div class="sb-this-label">this machine</div>
+        </div>
+        <span class="sb-status sb-online"></span>
+      </div>
+    </div>
+    <div class="main" style="opacity:0.35"><div class="path-bar"><span class="current">.claude</span></div><div style="flex:1"></div><div class="fl-status">8 items</div></div>
+    <div class="sheet-overlay">
+      <div class="sheet" style="padding:24px 28px 20px;">
+        <h2 style="text-align:center;font-size:17px;font-weight:600;margin-bottom:2px;">Link a Device</h2>
+        <p class="sheet-sub" style="margin-bottom:16px;">Open DevMesh on your other machine.</p>
+
+        <!-- Scanning status -->
+        <div class="scan-status">
+          <div class="scan-radar">
+            <svg viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="3" fill="#34C759"/>
+              <circle cx="12" cy="12" fill="none" stroke="#34C759" stroke-width="1">
+                <animate attributeName="r" values="4;18" dur="1.5s" repeatCount="indefinite"/>
+                <animate attributeName="opacity" values="0.6;0" dur="1.5s" repeatCount="indefinite"/>
+              </circle>
+              <circle cx="12" cy="12" fill="none" stroke="#34C759" stroke-width="1">
+                <animate attributeName="r" values="4;18" dur="1.5s" repeatCount="indefinite" begin="0.5s"/>
+                <animate attributeName="opacity" values="0.6;0" dur="1.5s" repeatCount="indefinite" begin="0.5s"/>
+              </circle>
+            </svg>
+          </div>
+          Scanning your network...
+        </div>
+
+        <!-- Empty state -->
+        <div style="background:#F5F5F7;border-radius:10px;padding:20px 18px;text-align:center;margin-bottom:8px;">
+          <p style="font-size:13px;color:#86868B;line-height:1.5;margin:0;">No devices found yet. Make sure DevMesh is open on your other machine and both are on the same WiFi network.</p>
+          <a href="#" style="font-size:12px;color:#007AFF;margin-top:8px;display:inline-block;text-decoration:none;">Troubleshoot</a>
+        </div>
+
+        <!-- Separator -->
+        <div class="sheet-sep" style="margin:14px 0 12px;">Not on the same network?</div>
+
+        <!-- PIN display -->
+        <div class="pin-section">
+          <label style="text-align:center;display:block;margin-bottom:8px;">Your PIN</label>
+          <div class="pin-digits">
+            <div class="pin-group">
+              <div class="pin-digit">4</div>
+              <div class="pin-digit">8</div>
+              <div class="pin-digit">2</div>
+            </div>
+            <div class="pin-spacer">·</div>
+            <div class="pin-group">
+              <div class="pin-digit">9</div>
+              <div class="pin-digit">1</div>
+              <div class="pin-digit">6</div>
+            </div>
+          </div>
+          <p style="text-align:center;font-size:11px;color:#86868B;margin-bottom:14px;">Open DevMesh on your other machine and enter this PIN · expires in 4:32</p>
+
+          <div class="sheet-sep" style="margin:10px 0;">or enter their PIN here</div>
 
           <div class="pin-digits" style="margin-bottom:12px;">
             <div class="pin-input-group">
@@ -592,8 +748,14 @@
   </div>
   <div class="app-body" style="position:relative">
     <div class="sidebar" style="opacity:0.35">
-      <div class="sb-section">Devices</div>
-      <div class="sb-item active"><div class="sb-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="2" y="3" width="12" height="8" rx="1.5"/></svg></div><span class="sb-label">MacBook Pro</span></div>
+      <div class="sb-item sb-this-machine active">
+        <div class="sb-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="2" y="3" width="12" height="8" rx="1.5"/><path d="M5 13h6"/><path d="M8 11v2"/></svg></div>
+        <div style="flex:1">
+          <span class="sb-label">MacBook Pro</span>
+          <div class="sb-this-label">this machine</div>
+        </div>
+        <span class="sb-status sb-online"></span>
+      </div>
     </div>
     <div class="main" style="opacity:0.35"><div style="flex:1"></div></div>
     <div class="sheet-overlay">
@@ -647,12 +809,35 @@
   </div>
   <div class="app-body">
     <div class="sidebar">
-      <div class="sb-section">Favorites</div>
-      <div class="sb-item"><div class="sb-icon"><svg viewBox="0 0 16 16" fill="currentColor" class="icon-blue"><rect x="2" y="3" width="12" height="10" rx="1.5" fill="none" stroke="currentColor" stroke-width="1.2"/></svg></div><span class="sb-label">Desktop</span></div>
-      <div class="sb-section">Devices</div>
-      <div class="sb-item"><div class="sb-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="2" y="3" width="12" height="8" rx="1.5"/><path d="M5 13h6M8 11v2"/></svg></div><span class="sb-label">MacBook Pro</span><span class="sb-status sb-online"></span></div>
-      <div class="sb-item"><div class="sb-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="3" y="2" width="10" height="9" rx="1.5"/><path d="M6 13h4M8 11v2"/></svg></div><span class="sb-label">Mac Mini</span><span class="sb-status sb-online"></span></div>
-      <div class="sb-item"><div class="sb-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="3" y="3" width="10" height="10" rx="1.5"/><path d="M3 10h10"/></svg></div><span class="sb-label">ThinkPad</span><span class="sb-meta">2h ago</span><span class="sb-status sb-offline"></span></div>
+      <div class="sb-item sb-this-machine active">
+        <div class="sb-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="2" y="3" width="12" height="8" rx="1.5"/><path d="M5 13h6"/><path d="M8 11v2"/></svg></div>
+        <div style="flex:1">
+          <span class="sb-label">MacBook Pro</span>
+          <div class="sb-this-label">this machine</div>
+        </div>
+        <span class="sb-status sb-online"></span>
+      </div>
+      <div class="sb-pinned">
+        <div class="sb-pin-item"><span class="sb-pin-star">★</span>Home</div>
+        <div class="sb-pin-item"><span class="sb-pin-star">★</span>Desktop</div>
+        <div class="sb-pin-item"><span class="sb-pin-star">★</span>.claude</div>
+      </div>
+      <div class="sb-item sb-item-device">
+        <div class="sb-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="3" y="2" width="10" height="9" rx="1.5"/><path d="M6 13h4"/><path d="M8 11v2"/></svg></div>
+        <div style="flex:1">
+          <span class="sb-label">Mac Mini</span>
+          <div class="sb-device-meta">studio · <span style="color:#34C759">Full</span></div>
+        </div>
+        <span class="sb-status sb-online"></span>
+      </div>
+      <div class="sb-item sb-item-device">
+        <div class="sb-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="3" y="3" width="10" height="10" rx="1.5"/><path d="M3 10h10"/></svg></div>
+        <div style="flex:1">
+          <span class="sb-label">ThinkPad</span>
+          <div class="sb-device-meta">travel · <span style="color:#FF9500">Read</span> · 2h ago</div>
+        </div>
+        <span class="sb-status sb-offline"></span>
+      </div>
       <div class="sb-bottom"><span class="sb-link"><svg viewBox="0 0 12 12" width="11" height="11" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="6" y1="2" x2="6" y2="10"/><line x1="2" y1="6" x2="10" y2="6"/></svg> Link Device</span></div>
     </div>
     <div class="main" style="position:relative">
@@ -665,16 +850,17 @@
           <button class="diff-seg-item active">Content</button>
           <button class="diff-seg-item">Semantic</button>
         </div>
+        <button style="padding:4px 12px;background:#007AFF;color:#fff;border:none;border-radius:5px;font-size:11px;font-weight:500;cursor:pointer;font-family:inherit;margin-left:6px;">Sync Selected →</button>
       </div>
       <div class="diff-content">
         <div class="diff-files">
           <div class="df-header"><div class="df-header-cell">MacBook Pro</div><div class="df-header-cell">Mac Mini</div></div>
-          <div class="df-row"><div class="df-cell"><span class="df-dot df-dot-diff"></span>.zshrc</div><div class="df-cell"><span class="df-dot df-dot-diff"></span>.zshrc</div></div>
-          <div class="df-row"><div class="df-cell"><span class="df-dot df-dot-match"></span>.gitconfig</div><div class="df-cell"><span class="df-dot df-dot-match"></span>.gitconfig</div></div>
-          <div class="df-row"><div class="df-cell"><span class="df-dot df-dot-miss"></span>.claude/</div><div class="df-cell"><span class="df-dot df-dot-miss"></span><span class="df-tag df-tag-miss">Missing</span></div></div>
-          <div class="df-row"><div class="df-cell"><span class="df-dot df-dot-diff"></span>.ssh/config</div><div class="df-cell"><span class="df-dot df-dot-diff"></span>.ssh/config</div></div>
-          <div class="df-row"><div class="df-cell"><span class="df-dot df-dot-match"></span>.npmrc</div><div class="df-cell"><span class="df-dot df-dot-match"></span>.npmrc</div></div>
-          <div class="df-row"><div class="df-cell"><span class="df-dot df-dot-miss"></span>.vimrc</div><div class="df-cell"><span class="df-dot df-dot-miss"></span><span class="df-tag df-tag-miss">Missing</span></div></div>
+          <div class="df-row"><div class="df-cell"><span class="df-dot df-dot-diff"></span>.zshrc</div><div class="df-cell"><span class="df-dot df-dot-diff"></span>.zshrc<span style="margin-left:auto;display:flex;gap:2px;"><button style="width:20px;height:16px;border:0.5px solid rgba(0,0,0,0.12);background:#fff;border-radius:3px;font-size:9px;cursor:pointer;color:#007AFF;">←</button><button style="width:20px;height:16px;border:0.5px solid rgba(0,0,0,0.12);background:#fff;border-radius:3px;font-size:9px;cursor:pointer;color:#007AFF;">→</button></span></div></div>
+          <div class="df-row"><div class="df-cell"><span class="df-dot df-dot-match"></span>.gitconfig</div><div class="df-cell"><span class="df-dot df-dot-match"></span>.gitconfig<span style="margin-left:auto;display:flex;gap:2px;"><button style="width:20px;height:16px;border:0.5px solid rgba(0,0,0,0.12);background:#fff;border-radius:3px;font-size:9px;cursor:pointer;color:#007AFF;">←</button><button style="width:20px;height:16px;border:0.5px solid rgba(0,0,0,0.12);background:#fff;border-radius:3px;font-size:9px;cursor:pointer;color:#007AFF;">→</button></span></div></div>
+          <div class="df-row"><div class="df-cell"><span class="df-dot df-dot-miss"></span>.claude/</div><div class="df-cell"><span class="df-dot df-dot-miss"></span><button style="padding:1px 8px;background:rgba(0,122,255,0.08);color:#007AFF;border:0.5px solid rgba(0,122,255,0.2);border-radius:3px;font-size:9px;font-weight:600;cursor:pointer;font-family:inherit;margin-left:auto;">Copy to Mini →</button></div></div>
+          <div class="df-row"><div class="df-cell"><span class="df-dot df-dot-diff"></span>.ssh/config</div><div class="df-cell"><span class="df-dot df-dot-diff"></span>.ssh/config<span style="margin-left:auto;display:flex;gap:2px;"><button style="width:20px;height:16px;border:0.5px solid rgba(0,0,0,0.12);background:#fff;border-radius:3px;font-size:9px;cursor:pointer;color:#007AFF;">←</button><button style="width:20px;height:16px;border:0.5px solid rgba(0,0,0,0.12);background:#fff;border-radius:3px;font-size:9px;cursor:pointer;color:#007AFF;">→</button></span></div></div>
+          <div class="df-row"><div class="df-cell"><span class="df-dot df-dot-match"></span>.npmrc</div><div class="df-cell"><span class="df-dot df-dot-match"></span>.npmrc<span style="margin-left:auto;display:flex;gap:2px;"><button style="width:20px;height:16px;border:0.5px solid rgba(0,0,0,0.12);background:#fff;border-radius:3px;font-size:9px;cursor:pointer;color:#007AFF;">←</button><button style="width:20px;height:16px;border:0.5px solid rgba(0,0,0,0.12);background:#fff;border-radius:3px;font-size:9px;cursor:pointer;color:#007AFF;">→</button></span></div></div>
+          <div class="df-row"><div class="df-cell"><span class="df-dot df-dot-miss"></span>.vimrc</div><div class="df-cell"><span class="df-dot df-dot-miss"></span><button style="padding:1px 8px;background:rgba(0,122,255,0.08);color:#007AFF;border:0.5px solid rgba(0,122,255,0.2);border-radius:3px;font-size:9px;font-weight:600;cursor:pointer;font-family:inherit;margin-left:auto;">Copy to Mini →</button></div></div>
         </div>
         <div class="diff-panel">
           <div class="diff-panel-hdr">.zshrc — 3 differences found</div>
@@ -711,6 +897,8 @@
 </div>
 
 
+<p style="text-align:center;font-size:12px;color:#86868B;margin-top:16px;max-width:700px;margin-left:auto;margin-right:auto;line-height:1.5;"><strong>Note:</strong> When an offline device is selected, a cached-data banner appears above the diff: <span style="background:rgba(255,149,0,0.06);border:0.5px solid rgba(255,149,0,0.15);padding:3px 10px;border-radius:4px;font-size:11px;color:#B45309;display:inline-block;margin-top:4px;">&#9888; ThinkPad is offline. Showing cached data from 2h ago. Sync unavailable until device reconnects.</span></p>
+
 <hr class="divider">
 <!-- ===================== SCREEN 4: CAPABILITY PACK BUILDER ===================== -->
 <p class="section-title">Screen 4</p>
@@ -725,16 +913,45 @@
   <div class="app-body">
     <!-- Sidebar -->
     <div class="sidebar">
-      <div class="sb-section">Devices</div>
-      <div class="sb-item"><div class="sb-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="2" y="3" width="12" height="8" rx="1.5"/><path d="M5 13h6M8 11v2"/></svg></div><span class="sb-label">MacBook Pro</span><span class="sb-status sb-online"></span></div>
-      <div class="sb-item"><div class="sb-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="3" y="2" width="10" height="9" rx="1.5"/><path d="M6 13h4M8 11v2"/></svg></div><span class="sb-label">Mac Mini</span><span class="sb-status sb-online"></span></div>
-
-      <div class="sb-section">Packs</div>
+      <div class="sb-item sb-this-machine">
+        <div class="sb-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="2" y="3" width="12" height="8" rx="1.5"/><path d="M5 13h6"/><path d="M8 11v2"/></svg></div>
+        <div style="flex:1">
+          <span class="sb-label">MacBook Pro</span>
+          <div class="sb-this-label">this machine</div>
+        </div>
+        <span class="sb-status sb-online"></span>
+      </div>
+      <div class="sb-pinned">
+        <div class="sb-pin-item"><span class="sb-pin-star">★</span>Home</div>
+        <div class="sb-pin-item"><span class="sb-pin-star">★</span>Desktop</div>
+        <div class="sb-pin-item"><span class="sb-pin-star">★</span>.claude</div>
+      </div>
+      <div class="sb-item sb-item-device">
+        <div class="sb-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="3" y="2" width="10" height="9" rx="1.5"/><path d="M6 13h4"/><path d="M8 11v2"/></svg></div>
+        <div style="flex:1">
+          <span class="sb-label">Mac Mini</span>
+          <div class="sb-device-meta">studio · <span style="color:#34C759">Full</span></div>
+        </div>
+        <span class="sb-status sb-online"></span>
+      </div>
+      <div class="sb-item sb-item-device">
+        <div class="sb-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="3" y="3" width="10" height="10" rx="1.5"/><path d="M3 10h10"/></svg></div>
+        <div style="flex:1">
+          <span class="sb-label">ThinkPad</span>
+          <div class="sb-device-meta">travel · <span style="color:#FF9500">Read</span> · 2h ago</div>
+        </div>
+        <span class="sb-status sb-offline"></span>
+      </div>
+      <div class="sb-divider"></div>
+      <div class="sb-item sb-packs-toggle">
+        <span class="sb-label" style="color:#A0A0A8">▾ Packs</span>
+        <span class="sb-meta">(3)</span>
+      </div>
       <div class="sb-item active"><div class="sb-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="2" y="4" width="12" height="9" rx="1.5"/><path d="M2 7h12"/><path d="M6 4V2h4v2"/></svg></div><span class="sb-label">Python ML Setup</span></div>
       <div class="sb-item"><div class="sb-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="2" y="4" width="12" height="9" rx="1.5"/><path d="M2 7h12"/><path d="M6 4V2h4v2"/></svg></div><span class="sb-label">Shell Config</span></div>
       <div class="sb-item"><div class="sb-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="2" y="4" width="12" height="9" rx="1.5"/><path d="M2 7h12"/><path d="M6 4V2h4v2"/></svg></div><span class="sb-label">Node Toolchain</span></div>
-
-      <div class="sb-bottom"><span class="sb-link"><svg viewBox="0 0 12 12" width="11" height="11" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="6" y1="2" x2="6" y2="10"/><line x1="2" y1="6" x2="10" y2="6"/></svg> New Pack</span></div>
+      <div class="sb-divider"></div>
+      <div class="sb-bottom"><span class="sb-link"><svg viewBox="0 0 12 12" width="11" height="11" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="6" y1="2" x2="6" y2="10"/><line x1="2" y1="6" x2="10" y2="6"/></svg> Link Device</span></div>
     </div>
 
     <div class="main">
@@ -931,12 +1148,44 @@
   </div>
   <div class="app-body">
     <div class="sidebar">
-      <div class="sb-section">Devices</div>
-      <div class="sb-item active"><div class="sb-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="2" y="3" width="12" height="8" rx="1.5"/><path d="M5 13h6M8 11v2"/></svg></div><span class="sb-label">MacBook Pro</span><span class="sb-status sb-online"></span></div>
-      <div class="sb-item"><div class="sb-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="3" y="2" width="10" height="9" rx="1.5"/><path d="M6 13h4M8 11v2"/></svg></div><span class="sb-label">Mac Mini</span><span class="sb-status sb-online"></span></div>
-      <div class="sb-section">Packs</div>
+      <div class="sb-item sb-this-machine active">
+        <div class="sb-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="2" y="3" width="12" height="8" rx="1.5"/><path d="M5 13h6"/><path d="M8 11v2"/></svg></div>
+        <div style="flex:1">
+          <span class="sb-label">MacBook Pro</span>
+          <div class="sb-this-label">this machine</div>
+        </div>
+        <span class="sb-status sb-online"></span>
+      </div>
+      <div class="sb-pinned">
+        <div class="sb-pin-item"><span class="sb-pin-star">★</span>Home</div>
+        <div class="sb-pin-item"><span class="sb-pin-star">★</span>Desktop</div>
+        <div class="sb-pin-item"><span class="sb-pin-star">★</span>.claude</div>
+      </div>
+      <div class="sb-item sb-item-device">
+        <div class="sb-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="3" y="2" width="10" height="9" rx="1.5"/><path d="M6 13h4"/><path d="M8 11v2"/></svg></div>
+        <div style="flex:1">
+          <span class="sb-label">Mac Mini</span>
+          <div class="sb-device-meta">studio · <span style="color:#34C759">Full</span></div>
+        </div>
+        <span class="sb-status sb-online"></span>
+      </div>
+      <div class="sb-item sb-item-device">
+        <div class="sb-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="3" y="3" width="10" height="10" rx="1.5"/><path d="M3 10h10"/></svg></div>
+        <div style="flex:1">
+          <span class="sb-label">ThinkPad</span>
+          <div class="sb-device-meta">travel · <span style="color:#FF9500">Read</span> · 2h ago</div>
+        </div>
+        <span class="sb-status sb-offline"></span>
+      </div>
+      <div class="sb-divider"></div>
+      <div class="sb-item sb-packs-toggle">
+        <span class="sb-label" style="color:#A0A0A8">▾ Packs</span>
+        <span class="sb-meta">(3)</span>
+      </div>
       <div class="sb-item"><div class="sb-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="2" y="4" width="12" height="9" rx="1.5"/><path d="M2 7h12"/><path d="M6 4V2h4v2"/></svg></div><span class="sb-label">Python ML Setup</span></div>
       <div class="sb-item"><div class="sb-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="2" y="4" width="12" height="9" rx="1.5"/><path d="M2 7h12"/><path d="M6 4V2h4v2"/></svg></div><span class="sb-label">Shell Config</span></div>
+      <div class="sb-divider"></div>
+      <div class="sb-bottom"><span class="sb-link"><svg viewBox="0 0 12 12" width="11" height="11" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="6" y1="2" x2="6" y2="10"/><line x1="2" y1="6" x2="10" y2="6"/></svg> Link Device</span></div>
     </div>
 
     <div class="main">
@@ -1008,6 +1257,9 @@
               <span style="color:#FF9500;font-weight:500;">zsh-autosuggestions</span>
               <span style="font-size:10px;color:#86868B;margin-left:auto;">plugin · git clone</span>
             </div>
+            <div style="display:flex;align-items:center;height:32px;padding:0 16px;gap:6px;font-size:13px;margin-top:4px;">
+              <span style="color:#007AFF;font-weight:500;cursor:pointer;display:flex;align-items:center;gap:4px;"><svg viewBox="0 0 12 12" width="12" height="12" fill="none" stroke="#007AFF" stroke-width="1.5"><line x1="6" y1="2" x2="6" y2="10"/><line x1="2" y1="6" x2="10" y2="6"/></svg>Add files</span>
+            </div>
           </div>
         </div>
 
@@ -1052,5 +1304,1314 @@
     </div>
   </div>
 </div>
+<hr class="divider">
+
+<!-- ===================== SCREEN 6: OFFLINE TRANSFER QUEUE (Option C: contextual right panel) ===================== -->
+<p class="section-title">Screen 6</p>
+<p class="section-subtitle">Offline Transfer Queue</p>
+<p class="section-desc">When a user drags a file to an offline device, a toast confirms the queue. A contextual panel slides in from the right, showing pending and active transfers. The panel auto-hides when the queue is empty.</p>
+
+<style>
+  /* Screen 6: Offline Transfer Queue */
+  .toast-banner { display:flex; align-items:center; gap:10px; padding:8px 14px; background:rgba(255,149,0,0.08); border:0.5px solid rgba(255,149,0,0.2); border-radius:8px; margin:8px 16px 0; font-size:12px; color:#1D1D1F; line-height:1.4; flex-shrink:0; }
+  .toast-text { flex:1; }
+  .toast-dismiss { width:18px; height:18px; border:none; background:none; color:#86868B; font-size:14px; cursor:pointer; display:flex; align-items:center; justify-content:center; border-radius:3px; flex-shrink:0; }
+  .toast-dismiss:hover { background:rgba(0,0,0,0.06); color:#1D1D1F; }
+  .sb-badge-pending { background:rgba(255,149,0,0.15); color:#FF9500; font-size:9px; font-weight:600; padding:1px 5px; border-radius:8px; margin-left:4px; flex-shrink:0; }
+
+  /* Queue panel (right side) */
+  .queue-panel { width:210px; border-left:0.5px solid rgba(0,0,0,0.08); background:#FAFAFA; display:flex; flex-direction:column; flex-shrink:0; }
+  .queue-panel-header { padding:10px 12px 8px; display:flex; align-items:center; justify-content:space-between; border-bottom:0.5px solid rgba(0,0,0,0.06); }
+  .queue-panel-title { font-size:11px; font-weight:600; color:#86868B; text-transform:uppercase; letter-spacing:0.5px; }
+  .queue-panel-close { width:16px; height:16px; border:none; background:none; color:#C7C7CC; font-size:12px; cursor:pointer; border-radius:3px; display:flex; align-items:center; justify-content:center; }
+  .queue-panel-close:hover { background:rgba(0,0,0,0.06); color:#86868B; }
+  .queue-item { padding:8px 12px; border-bottom:0.5px solid rgba(0,0,0,0.04); }
+  .queue-item:nth-child(even) { background:rgba(0,0,0,0.015); }
+  .queue-item-top { display:flex; align-items:center; gap:6px; margin-bottom:2px; }
+  .queue-item-dot { width:6px; height:6px; border-radius:50%; flex-shrink:0; }
+  .qi-amber { background:#FF9500; }
+  .qi-green { background:#34C759; }
+  .qi-blue { background:#007AFF; }
+  .queue-item-file { font-size:11px; font-weight:500; color:#1D1D1F; font-family:'JetBrains Mono',ui-monospace,monospace; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; flex:1; }
+  .queue-item-cancel { font-size:10px; color:#FF3B30; cursor:pointer; background:none; border:none; font-family:inherit; font-weight:500; flex-shrink:0; }
+  .queue-item-cancel:hover { text-decoration:underline; }
+  .queue-item-bottom { font-size:10px; color:#86868B; padding-left:12px; }
+  .queue-item-done { opacity:0.5; }
+  .queue-panel-footer { margin-top:auto; padding:8px 12px; border-top:0.5px solid rgba(0,0,0,0.06); display:flex; align-items:center; justify-content:space-between; }
+  .queue-panel-count { font-size:10px; color:#86868B; }
+  .queue-panel-clear { font-size:10px; color:#007AFF; cursor:pointer; background:none; border:none; font-family:inherit; }
+  .queue-panel-clear:hover { text-decoration:underline; }
+</style>
+
+<div class="window">
+  <div class="titlebar">
+    <div class="traffic-lights"><span class="tl-red"></span><span class="tl-yellow"></span><span class="tl-green"></span></div>
+    <div class="titlebar-center">
+      <div class="titlebar-nav"><button>&#8249;</button><button>&#8250;</button></div>
+      <div class="titlebar-title">maggieyi</div>
+    </div>
+    <div class="titlebar-right">
+      <div class="tb-view-seg">
+        <button class="tb-view-item">&#8862;</button>
+        <button class="tb-view-item active">&#8801;</button>
+        <button class="tb-view-item">&#11007;</button>
+        <button class="tb-view-item">&#8863;</button>
+      </div>
+      <div style="display:flex;background:rgba(0,0,0,0.06);border-radius:6px;padding:2px;gap:1px;">
+        <button style="padding:3px 10px;border:none;background:#fff;border-radius:4px;font-size:11px;color:#1D1D1F;cursor:pointer;font-family:inherit;box-shadow:0 0.5px 2px rgba(0,0,0,0.1);">Send to... &#9662;</button>
+      </div>
+      <button class="tb-icon-btn">&#8593;</button>
+      <button class="tb-icon-btn">&#8943;</button>
+      <div class="search-wrap"><input class="tb-search" type="text" placeholder="Search"></div>
+    </div>
+  </div>
+  <div class="app-body">
+    <div class="sidebar">
+      <div class="sb-item sb-this-machine active">
+        <div class="sb-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="2" y="3" width="12" height="8" rx="1.5"/><path d="M5 13h6"/><path d="M8 11v2"/></svg></div>
+        <div style="flex:1">
+          <span class="sb-label">MacBook Pro</span>
+          <div class="sb-this-label">this machine</div>
+        </div>
+        <span class="sb-status sb-online"></span>
+      </div>
+      <div class="sb-pinned">
+        <div class="sb-pin-item"><span class="sb-pin-star">★</span>Home</div>
+        <div class="sb-pin-item"><span class="sb-pin-star">★</span>Desktop</div>
+        <div class="sb-pin-item"><span class="sb-pin-star">★</span>.claude</div>
+      </div>
+      <div class="sb-item sb-item-device">
+        <div class="sb-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="3" y="2" width="10" height="9" rx="1.5"/><path d="M6 13h4"/><path d="M8 11v2"/></svg></div>
+        <div style="flex:1">
+          <span class="sb-label">Mac Mini</span>
+          <div class="sb-device-meta">studio · <span style="color:#34C759">Full</span></div>
+        </div>
+        <span class="sb-status sb-online"></span>
+      </div>
+      <div class="sb-item sb-item-device">
+        <div class="sb-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="3" y="3" width="10" height="10" rx="1.5"/><path d="M3 10h10"/></svg></div>
+        <div style="flex:1">
+          <span class="sb-label">ThinkPad</span>
+          <div class="sb-device-meta">travel · <span style="color:#FF9500">Read</span> · 2h ago</div>
+        </div>
+        <span class="sb-status sb-offline"></span>
+      </div>
+      <div class="sb-divider"></div>
+      <div class="sb-item sb-packs-toggle">
+        <span class="sb-label" style="color:#A0A0A8">▸ Packs</span>
+        <span class="sb-meta">(3)</span>
+      </div>
+      <div class="sb-divider"></div>
+      <div class="sb-bottom"><span class="sb-link"><svg viewBox="0 0 12 12" width="11" height="11" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="6" y1="2" x2="6" y2="10"/><line x1="2" y1="6" x2="10" y2="6"/></svg> Link Device</span></div>
+    </div>
+    <div class="main" style="flex:1;display:flex;flex-direction:column;">
+      <div class="path-bar"><span>MacBook Pro</span><span class="sep"> &#8250; </span><span>Users</span><span class="sep"> &#8250; </span><span>maggie</span><span class="sep"> &#8250; </span><span class="current">.claude</span></div>
+      <!-- Toast notification -->
+      <div class="toast-banner">
+        <span style="font-size:14px;">&#9888;&#65039;</span>
+        <span class="toast-text">ThinkPad is offline. Transfer queued — will complete automatically when it reconnects.</span>
+        <button class="toast-dismiss">&times;</button>
+      </div>
+      <div style="flex:1;display:flex;overflow:hidden;">
+        <!-- File list (narrower when queue panel is open) -->
+        <div style="flex:1;display:flex;flex-direction:column;overflow:hidden;">
+          <div class="file-list" style="flex:1;overflow-y:auto;">
+            <div class="fl-header"><div class="sortable">Name &#9662;</div><div>Date Modified</div><div>Size</div><div>Kind</div></div>
+            <div class="fl-row"><div class="fl-name"><svg viewBox="0 0 16 16" class="icon-folder"><path d="M1.5 3.5h4l1.5 1.5h7.5v8h-13z" fill="currentColor" opacity="0.15" stroke="currentColor" stroke-width="0.8"/></svg>commands</div><div class="fl-meta">Mar 28, 11:30 AM</div><div class="fl-meta">--</div><div class="fl-meta">Folder</div></div>
+            <div class="fl-row"><div class="fl-name"><svg viewBox="0 0 16 16" class="icon-folder"><path d="M1.5 3.5h4l1.5 1.5h7.5v8h-13z" fill="currentColor" opacity="0.15" stroke="currentColor" stroke-width="0.8"/></svg>settings</div><div class="fl-meta">Mar 30, 2:15 PM</div><div class="fl-meta">--</div><div class="fl-meta">Folder</div></div>
+            <div class="fl-row"><div class="fl-name"><svg viewBox="0 0 16 16" class="icon-folder"><path d="M1.5 3.5h4l1.5 1.5h7.5v8h-13z" fill="currentColor" opacity="0.15" stroke="currentColor" stroke-width="0.8"/></svg>skills</div><div class="fl-meta">Apr 1, 9:04 AM</div><div class="fl-meta">--</div><div class="fl-meta">Folder</div></div>
+            <div class="fl-row selected"><div class="fl-name"><svg viewBox="0 0 16 16" class="icon-doc"><rect x="3" y="1.5" width="10" height="13" rx="1.5" fill="none" stroke="currentColor" stroke-width="1"/><line x1="5.5" y1="5" x2="10.5" y2="5" stroke="currentColor" stroke-width="0.8"/><line x1="5.5" y1="7.5" x2="10.5" y2="7.5" stroke="currentColor" stroke-width="0.8"/><line x1="5.5" y1="10" x2="8.5" y2="10" stroke="currentColor" stroke-width="0.8"/></svg>CLAUDE.md</div><div class="fl-meta">Apr 3, 1:50 PM</div><div class="fl-meta">4.2 KB</div><div class="fl-meta">Markdown</div></div>
+            <div class="fl-row"><div class="fl-name"><svg viewBox="0 0 16 16" class="icon-config"><rect x="3" y="1.5" width="10" height="13" rx="1.5" fill="none" stroke="currentColor" stroke-width="1"/><text x="8" y="10.5" text-anchor="middle" font-size="6" font-weight="600" fill="currentColor">{}</text></svg>settings.json</div><div class="fl-meta">Apr 2, 4:16 PM</div><div class="fl-meta">1.8 KB</div><div class="fl-meta">JSON</div></div>
+            <div class="fl-row"><div class="fl-name"><svg viewBox="0 0 16 16" class="icon-lock"><rect x="3" y="1.5" width="10" height="13" rx="1.5" fill="none" stroke="currentColor" stroke-width="1"/><circle cx="8" cy="7" r="2" fill="none" stroke="currentColor" stroke-width="0.8"/><line x1="8" y1="9" x2="8" y2="11" stroke="currentColor" stroke-width="0.8"/></svg>.env</div><div class="fl-meta">Mar 15, 3:01 PM</div><div class="fl-meta">256 B</div><div class="fl-meta">Text</div></div>
+          </div>
+          <div class="fl-status">6 items, 10.3 KB</div>
+        </div>
+        <!-- Queue panel (slides in when queue is non-empty) -->
+        <div class="queue-panel">
+          <div class="queue-panel-header">
+            <span class="queue-panel-title">Queue</span>
+            <button class="queue-panel-close">&times;</button>
+          </div>
+          <!-- Pending items -->
+          <div class="queue-item">
+            <div class="queue-item-top">
+              <span class="queue-item-dot qi-amber"></span>
+              <span class="queue-item-file">settings.json</span>
+              <button class="queue-item-cancel">&#10005;</button>
+            </div>
+            <div class="queue-item-bottom">→ ThinkPad · queued 10m ago</div>
+          </div>
+          <div class="queue-item">
+            <div class="queue-item-top">
+              <span class="queue-item-dot qi-amber"></span>
+              <span class="queue-item-file">CLAUDE.md</span>
+              <button class="queue-item-cancel">&#10005;</button>
+            </div>
+            <div class="queue-item-bottom">→ ThinkPad · queued 10m ago</div>
+          </div>
+          <!-- Completed items (faded) -->
+          <div class="queue-item queue-item-done">
+            <div class="queue-item-top">
+              <span class="queue-item-dot qi-green"></span>
+              <span class="queue-item-file">.zshrc</span>
+            </div>
+            <div class="queue-item-bottom">→ Mac Mini · 2h ago ✓</div>
+          </div>
+          <div class="queue-item queue-item-done">
+            <div class="queue-item-top">
+              <span class="queue-item-dot qi-green"></span>
+              <span class="queue-item-file">.gitconfig</span>
+            </div>
+            <div class="queue-item-bottom">→ Mac Mini · 2h ago ✓</div>
+          </div>
+          <div class="queue-panel-footer">
+            <span class="queue-panel-count">2 pending · 2 done</span>
+            <button class="queue-panel-clear">Clear</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<p class="section-desc" style="margin-top:12px;">The queue panel slides in from the right when a transfer is queued. It auto-hides when all transfers complete and are cleared. Zero visual cost when the queue is empty. Badge on ThinkPad in sidebar shows pending count.</p>
+
+<hr class="divider">
+
+<!-- ===================== SCREEN 7: WATCHED PATHS ===================== -->
+<p class="section-title">Screen 7</p>
+<p class="section-subtitle">Watched Paths (Horizon 2 Preview)</p>
+<p class="section-desc">A settings-like view for managing pinned paths that auto-sync across devices. Users can see sync status, review diffs for out-of-sync files, and watch new paths.</p>
+
+<style>
+  /* Screen 7: Watched Paths */
+  .wp-header-area { padding:24px 28px 20px; border-bottom:0.5px solid rgba(0,0,0,0.08); background:#FAFAFA; flex-shrink:0; }
+  .wp-title { font-size:17px; font-weight:600; color:#1D1D1F; margin-bottom:2px; }
+  .wp-subtitle { font-size:13px; color:#86868B; line-height:1.4; }
+  .wp-list { flex:1; overflow-y:auto; padding:0; }
+  .wp-entry { display:flex; align-items:center; gap:14px; padding:10px 28px; min-height:48px; border-bottom:0.5px solid rgba(0,0,0,0.06); transition:background 0.08s; }
+  .wp-entry:hover { background:rgba(0,122,255,0.03); }
+  .wp-file-icon { width:28px; height:28px; background:#F5F5F7; border-radius:6px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .wp-file-icon svg { width:16px; height:16px; color:#86868B; }
+  .wp-info { flex:1; min-width:0; }
+  .wp-path { font-size:13px; font-weight:500; color:#1D1D1F; font-family:'JetBrains Mono',ui-monospace,monospace; margin-bottom:3px; }
+  .wp-devices { display:flex; align-items:center; gap:4px; flex-wrap:wrap; font-size:11px; color:#86868B; }
+  .wp-device-pill { font-size:10px; padding:1px 7px; background:rgba(0,122,255,0.08); color:#007AFF; border-radius:8px; font-weight:500; white-space:nowrap; }
+  .wp-status { display:flex; align-items:center; gap:8px; flex-shrink:0; }
+  .wp-status-text { font-size:11px; font-weight:500; white-space:nowrap; }
+  .wp-status-green { color:#34C759; }
+  .wp-status-amber { color:#FF9500; }
+  .wp-status-gray { color:#86868B; }
+  .wp-review-link { font-size:11px; color:#007AFF; font-weight:500; cursor:pointer; white-space:nowrap; }
+  .wp-review-link:hover { text-decoration:underline; }
+  .wp-menu-btn { width:24px; height:24px; border:none; background:none; color:#86868B; font-size:16px; cursor:pointer; border-radius:4px; display:flex; align-items:center; justify-content:center; }
+  .wp-menu-btn:hover { background:rgba(0,0,0,0.06); color:#1D1D1F; }
+  .wp-add-btn { display:flex; align-items:center; gap:6px; padding:10px 28px; font-size:13px; color:#007AFF; font-weight:500; cursor:pointer; border:none; background:none; font-family:inherit; width:100%; }
+  .wp-add-btn:hover { background:rgba(0,122,255,0.04); }
+</style>
+
+<div class="window" style="height:420px;">
+  <div class="titlebar">
+    <div class="traffic-lights"><span class="tl-red"></span><span class="tl-yellow"></span><span class="tl-green"></span></div>
+    <div class="titlebar-center"><div class="titlebar-title">DevMesh &mdash; Watched Paths</div></div>
+  </div>
+  <div style="flex:1;display:flex;flex-direction:column;overflow:hidden;">
+    <div class="wp-header-area">
+      <div class="wp-title">Watched Paths</div>
+      <div class="wp-subtitle">Files pinned for automatic sync notification when devices reconnect.</div>
+    </div>
+    <div class="wp-list">
+      <!-- Entry 1: settings.json -->
+      <div class="wp-entry">
+        <div class="wp-file-icon">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="1.5" width="10" height="13" rx="1.5"/><line x1="5.5" y1="5" x2="10.5" y2="5" stroke-width="0.8"/><line x1="5.5" y1="7.5" x2="10.5" y2="7.5" stroke-width="0.8"/><line x1="5.5" y1="10" x2="8.5" y2="10" stroke-width="0.8"/></svg>
+        </div>
+        <div class="wp-info">
+          <div class="wp-path">~/.claude/settings.json</div>
+          <div class="wp-devices">
+            Synced across:
+            <span class="wp-device-pill">MacBook Pro</span>
+            <span class="wp-device-pill">Mac Mini</span>
+            <span class="wp-device-pill">ThinkPad</span>
+          </div>
+        </div>
+        <div class="wp-status">
+          <span class="wp-status-text wp-status-green">In sync &#10003;</span>
+          <button class="wp-menu-btn">&#8943;</button>
+        </div>
+      </div>
+
+      <!-- Entry 2: .zshrc -->
+      <div class="wp-entry">
+        <div class="wp-file-icon">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="1.5" width="10" height="13" rx="1.5"/><line x1="5.5" y1="5" x2="10.5" y2="5" stroke-width="0.8"/><line x1="5.5" y1="7.5" x2="10.5" y2="7.5" stroke-width="0.8"/><line x1="5.5" y1="10" x2="8.5" y2="10" stroke-width="0.8"/></svg>
+        </div>
+        <div class="wp-info">
+          <div class="wp-path">~/.zshrc</div>
+          <div class="wp-devices">
+            Synced across:
+            <span class="wp-device-pill">MacBook Pro</span>
+            <span class="wp-device-pill">Mac Mini</span>
+          </div>
+        </div>
+        <div class="wp-status">
+          <span class="wp-status-text wp-status-amber">1 device behind</span>
+          <span class="wp-review-link">Review Diff</span>
+          <button class="wp-menu-btn">&#8943;</button>
+        </div>
+      </div>
+
+      <!-- Entry 3: .ssh/ -->
+      <div class="wp-entry">
+        <div class="wp-file-icon">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><path d="M1.5 3.5h4l1.5 1.5h7.5v8h-13z" fill="currentColor" opacity="0.08"/></svg>
+        </div>
+        <div class="wp-info">
+          <div class="wp-path">~/.ssh/</div>
+          <div class="wp-devices">
+            Synced across:
+            <span class="wp-device-pill">MacBook Pro</span>
+            <span class="wp-device-pill">ThinkPad</span>
+          </div>
+        </div>
+        <div class="wp-status">
+          <span class="wp-status-text wp-status-gray">ThinkPad offline &mdash; will sync on reconnect</span>
+          <button class="wp-menu-btn">&#8943;</button>
+        </div>
+      </div>
+    </div>
+    <!-- Add path button -->
+    <div style="border-top:0.5px solid rgba(0,0,0,0.08);flex-shrink:0;">
+      <button class="wp-add-btn">
+        <svg viewBox="0 0 12 12" width="12" height="12" fill="none" stroke="#007AFF" stroke-width="1.5"><line x1="6" y1="2" x2="6" y2="10"/><line x1="2" y1="6" x2="10" y2="6"/></svg>
+        Watch a path
+      </button>
+    </div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- ===================== SCREEN 8: PAIRING WITH PERMISSIONS ===================== -->
+<p class="section-title">Screen 8</p>
+<p class="section-subtitle">Pairing &mdash; Permission &amp; Label Assignment</p>
+<p class="section-desc">When connecting a new device, users configure permissions, directory access scope, group labels, and expiration before the connection is established. This replaces the simple "Allow/Deny" confirmation.</p>
+
+<style>
+  /* Screen 8: Permission setup sheet */
+  .perm-sheet { width:480px; background:rgba(255,255,255,0.98); backdrop-filter:blur(40px); border-radius:0 0 12px 12px; padding:24px 28px 20px; box-shadow:0 12px 40px rgba(0,0,0,0.18); align-self:flex-start; }
+  .perm-sheet h2 { font-size:17px; font-weight:600; margin-bottom:2px; }
+  .perm-sheet .perm-sub { font-size:13px; color:#86868B; margin-bottom:20px; line-height:1.4; }
+  .perm-section-label { font-size:10px; font-weight:600; color:#86868B; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:8px; }
+  .perm-option { display:flex; align-items:flex-start; gap:10px; padding:10px 12px; border:0.5px solid rgba(0,0,0,0.08); border-radius:8px; margin-bottom:6px; cursor:pointer; transition:all 0.1s; position:relative; }
+  .perm-option:hover { border-color:rgba(0,122,255,0.2); background:rgba(0,122,255,0.02); }
+  .perm-option.perm-selected { border-color:rgba(0,122,255,0.4); background:rgba(0,122,255,0.04); }
+  .perm-radio { width:16px; height:16px; border-radius:50%; border:1.5px solid #C7C7CC; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:1px; }
+  .perm-radio-fill { width:8px; height:8px; border-radius:50%; }
+  .perm-option.perm-selected .perm-radio { border-color:#007AFF; }
+  .perm-option.perm-selected .perm-radio-fill { background:#007AFF; }
+  .perm-option-info { flex:1; }
+  .perm-option-name { font-size:13px; font-weight:600; color:#1D1D1F; display:flex; align-items:center; gap:6px; }
+  .perm-option-desc { font-size:11px; color:#86868B; margin-top:1px; line-height:1.3; }
+  .perm-level-dot { width:7px; height:7px; border-radius:50%; flex-shrink:0; }
+  .perm-badge-rec { font-size:9px; font-weight:600; padding:1px 6px; background:rgba(0,122,255,0.1); color:#007AFF; border-radius:4px; text-transform:uppercase; letter-spacing:0.3px; }
+  .perm-section { margin-bottom:16px; }
+  .perm-dir-list { padding-left:24px; margin-top:6px; }
+  .perm-dir-item { display:flex; align-items:center; gap:6px; font-size:12px; color:#1D1D1F; height:24px; font-family:'JetBrains Mono',ui-monospace,monospace; }
+  .perm-dir-item input[type="checkbox"] { accent-color:#007AFF; }
+  .perm-dir-add { font-size:11px; color:#007AFF; cursor:pointer; margin-top:4px; margin-left:24px; display:flex; align-items:center; gap:4px; font-weight:500; }
+  .perm-dir-add:hover { text-decoration:underline; }
+  .perm-input-group { margin-bottom:16px; }
+  .perm-input-label { font-size:11px; font-weight:500; color:#86868B; margin-bottom:4px; display:block; }
+  .perm-text-input { width:100%; padding:6px 10px; border:0.5px solid #C8C8C8; border-radius:7px; font-size:12px; font-family:inherit; outline:none; background:#fff; color:#1D1D1F; }
+  .perm-text-input:focus { border-color:#007AFF; box-shadow:0 0 0 3px rgba(0,122,255,0.12); }
+  .perm-text-input::placeholder { color:#C7C7CC; }
+  .perm-helper { font-size:10px; color:#86868B; margin-top:3px; }
+  .perm-select { width:100%; padding:6px 10px; border:0.5px solid #C8C8C8; border-radius:7px; font-size:12px; font-family:inherit; outline:none; background:#fff; color:#1D1D1F; appearance:none; background-image:url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%2386868B' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 10px center; padding-right:28px; cursor:pointer; }
+  .perm-select:focus { border-color:#007AFF; box-shadow:0 0 0 3px rgba(0,122,255,0.12); }
+</style>
+
+<div class="window" style="position:relative;height:auto;min-height:780px;">
+  <div class="titlebar">
+    <div class="traffic-lights"><span class="tl-red"></span><span class="tl-yellow"></span><span class="tl-green"></span></div>
+    <div class="titlebar-center"><div class="titlebar-title">DevMesh</div></div>
+  </div>
+  <div class="app-body" style="position:relative;min-height:728px;">
+    <div class="sidebar" style="opacity:0.35">
+      <div class="sb-item sb-this-machine active">
+        <div class="sb-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="2" y="3" width="12" height="8" rx="1.5"/><path d="M5 13h6"/><path d="M8 11v2"/></svg></div>
+        <div style="flex:1">
+          <span class="sb-label">MacBook Pro</span>
+          <div class="sb-this-label">this machine</div>
+        </div>
+        <span class="sb-status sb-online"></span>
+      </div>
+    </div>
+    <div class="main" style="opacity:0.35"><div style="flex:1"></div></div>
+    <div class="sheet-overlay" style="align-items:flex-start;padding-top:0;">
+      <div class="perm-sheet">
+        <h2>Set up Mac Mini</h2>
+        <p class="perm-sub">Choose what Mac Mini can access on this machine.</p>
+
+        <!-- SECTION 1: Permission Level -->
+        <div class="perm-section">
+          <div class="perm-section-label">Permission Level</div>
+          <div class="perm-option">
+            <div class="perm-radio"><div class="perm-radio-fill"></div></div>
+            <div class="perm-option-info">
+              <div class="perm-option-name"><span class="perm-level-dot" style="background:#007AFF;"></span>Browse Only</div>
+              <div class="perm-option-desc">Can see your files and diffs, but can't copy or change anything</div>
+            </div>
+          </div>
+          <div class="perm-option perm-selected">
+            <div class="perm-radio"><div class="perm-radio-fill"></div></div>
+            <div class="perm-option-info">
+              <div class="perm-option-name"><span class="perm-level-dot" style="background:#FF9500;"></span>Read + Copy <span class="perm-badge-rec">Recommended</span></div>
+              <div class="perm-option-desc">Can see and copy files from this machine</div>
+            </div>
+          </div>
+          <div class="perm-option">
+            <div class="perm-radio"><div class="perm-radio-fill"></div></div>
+            <div class="perm-option-info">
+              <div class="perm-option-name"><span class="perm-level-dot" style="background:#34C759;"></span>Full Access</div>
+              <div class="perm-option-desc">Can see, copy, and modify files on this machine. Each change requires your approval.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SECTION 2: Directory Access -->
+        <div class="perm-section">
+          <div class="perm-section-label">Directory Access</div>
+          <div class="perm-option" style="padding:8px 12px;margin-bottom:4px;">
+            <div class="perm-radio"><div class="perm-radio-fill"></div></div>
+            <div class="perm-option-info"><div class="perm-option-name" style="font-weight:500;font-size:12px;">Everything (full filesystem)</div></div>
+          </div>
+          <div class="perm-option perm-selected" style="padding:8px 12px;margin-bottom:4px;">
+            <div class="perm-radio"><div class="perm-radio-fill"></div></div>
+            <div class="perm-option-info"><div class="perm-option-name" style="font-weight:500;font-size:12px;">Specific directories only</div></div>
+          </div>
+          <div class="perm-dir-list">
+            <div class="perm-dir-item"><input type="checkbox" checked>~/.claude/</div>
+            <div class="perm-dir-item"><input type="checkbox" checked>~/.config/</div>
+            <div class="perm-dir-item"><input type="checkbox">~/Documents/</div>
+            <div class="perm-dir-item"><input type="checkbox">~/Desktop/</div>
+          </div>
+          <div class="perm-dir-add">
+            <svg viewBox="0 0 12 12" width="10" height="10" fill="none" stroke="#007AFF" stroke-width="1.5"><line x1="6" y1="2" x2="6" y2="10"/><line x1="2" y1="6" x2="10" y2="6"/></svg>
+            Add directory
+          </div>
+        </div>
+
+        <!-- SECTION 3: Group -->
+        <div class="perm-input-group">
+          <label class="perm-input-label">Group (optional)</label>
+          <input type="text" class="perm-text-input" placeholder="e.g., Personal, Work, Team...">
+          <div class="perm-helper">Groups organize devices in your sidebar</div>
+        </div>
+
+        <!-- SECTION 4: Expiration -->
+        <div class="perm-input-group">
+          <label class="perm-input-label">Expiration</label>
+          <select class="perm-select">
+            <option>No expiration</option>
+            <option>1 hour</option>
+            <option>24 hours</option>
+            <option>7 days</option>
+            <option>30 days</option>
+          </select>
+        </div>
+
+        <!-- Buttons -->
+        <div class="sheet-btns" style="margin-top:8px;">
+          <button class="sheet-btn sheet-btn-cancel">Cancel</button>
+          <button class="sheet-btn sheet-btn-primary">Connect</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  /* ===== Screens 9-11 Styles ===== */
+
+  /* Screen 9: Empty State */
+  .empty-state { display:flex; flex-direction:column; align-items:center; justify-content:center; flex:1; padding:40px; }
+  .empty-icon { width:48px; height:48px; color:#C7C7CC; margin-bottom:16px; }
+  .empty-title { font-size:20px; font-weight:600; color:#1D1D1F; margin-bottom:6px; }
+  .empty-subtitle { font-size:14px; color:#86868B; text-align:center; max-width:360px; line-height:1.5; margin-bottom:20px; }
+  .empty-cta { padding:8px 20px; background:#007AFF; color:#fff; border:none; border-radius:8px; font-size:14px; font-weight:600; cursor:pointer; font-family:inherit; }
+  .empty-cta:hover { background:#0066E0; }
+  .empty-hint { font-size:11px; color:#C7C7CC; margin-top:10px; }
+  .sb-link-device-btn { display:block; width:100%; padding:8px; background:#007AFF; color:#fff; border:none; border-radius:6px; font-size:13px; font-weight:600; cursor:pointer; font-family:inherit; text-align:center; }
+  .sb-link-device-btn:hover { background:#0066E0; }
+
+  /* Screen 10: Write Confirmation */
+  .wc-sheet { width:400px; background:rgba(255,255,255,0.98); backdrop-filter:blur(40px); border-radius:0 0 12px 12px; padding:24px 28px 20px; box-shadow:0 12px 40px rgba(0,0,0,0.18); align-self:flex-start; }
+  .wc-icon { width:36px; height:36px; margin:0 auto 12px; display:flex; align-items:center; justify-content:center; }
+  .wc-icon svg { width:36px; height:36px; }
+  .wc-title { text-align:center; font-size:17px; font-weight:600; margin-bottom:4px; }
+  .wc-subtitle { text-align:center; font-size:13px; color:#86868B; margin-bottom:16px; }
+  .wc-file-list { background:#F5F5F7; border-radius:8px; padding:12px; margin-bottom:12px; }
+  .wc-file-row { display:flex; align-items:center; gap:8px; height:22px; font-size:13px; }
+  .wc-file-row + .wc-file-row { margin-top:4px; }
+  .wc-file-row svg { width:14px; height:14px; color:#86868B; flex-shrink:0; }
+  .wc-file-name { font-weight:500; color:#1D1D1F; white-space:nowrap; }
+  .wc-file-path { color:#86868B; font-size:12px; flex:1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .wc-file-size { color:#86868B; font-size:12px; margin-left:auto; flex-shrink:0; }
+  .wc-from { font-size:11px; color:#86868B; margin-bottom:16px; }
+  .wc-btns { display:flex; justify-content:flex-end; gap:8px; }
+  .wc-btn { padding:5px 14px; border-radius:6px; font-size:13px; font-weight:500; cursor:pointer; font-family:inherit; border:none; background:none; }
+  .wc-btn-deny { color:#FF3B30; }
+  .wc-btn-deny:hover { background:rgba(255,59,48,0.06); }
+  .wc-btn-allow { color:#007AFF; }
+  .wc-btn-allow:hover { background:rgba(0,122,255,0.06); }
+  .wc-btn-primary { background:#007AFF; color:#fff; }
+  .wc-btn-primary:hover { background:#0066E0; }
+
+  /* Screen 11: Context Menu */
+  .ctx-menu { position:absolute; width:200px; background:#fff; border-radius:6px; box-shadow:0 4px 20px rgba(0,0,0,0.15), 0 0 0 0.5px rgba(0,0,0,0.08); padding:4px 0; z-index:20; font-size:13px; user-select:none; }
+  .ctx-item { height:28px; padding:0 12px; display:flex; align-items:center; cursor:default; border-radius:0; color:#1D1D1F; }
+  .ctx-item:hover { background:rgba(0,0,0,0.04); }
+  .ctx-item.ctx-hover { background:#007AFF; color:#fff; border-radius:4px; margin:0 4px; padding:0 8px; }
+  .ctx-item.ctx-hover .ctx-shortcut { color:rgba(255,255,255,0.7); }
+  .ctx-item.ctx-disabled { color:#C7C7CC; }
+  .ctx-item .ctx-submenu-arrow { margin-left:auto; font-size:10px; color:#86868B; }
+  .ctx-item.ctx-hover .ctx-submenu-arrow { color:rgba(255,255,255,0.7); }
+  .ctx-shortcut { margin-left:auto; font-size:12px; color:#86868B; }
+  .ctx-separator { height:1px; background:rgba(0,0,0,0.08); margin:4px; }
+  .fl-row.ctx-highlight { background:rgba(0,122,255,0.08); }
+</style>
+
+<hr class="divider">
+
+<!-- ===================== SCREEN 9: FIRST LAUNCH EMPTY STATE ===================== -->
+<p class="section-title">Screen 9</p>
+<p class="section-subtitle">First Launch Empty State</p>
+
+<div class="window">
+  <div class="titlebar">
+    <div class="traffic-lights"><span class="tl-red"></span><span class="tl-yellow"></span><span class="tl-green"></span></div>
+    <div class="titlebar-center">
+      <div class="titlebar-nav"><button>&#8249;</button><button>&#8250;</button></div>
+      <div class="titlebar-title">DevMesh</div>
+    </div>
+    <div class="titlebar-right">
+      <div class="tb-view-seg">
+        <button class="tb-view-item">&#8862;</button>
+        <button class="tb-view-item active">&#8801;</button>
+        <button class="tb-view-item">&#11007;</button>
+        <button class="tb-view-item">&#8863;</button>
+      </div>
+      <button class="tb-icon-btn">&#8593;</button>
+      <button class="tb-icon-btn">&#8943;</button>
+      <div class="search-wrap"><input class="tb-search" type="text" placeholder="Search"></div>
+    </div>
+  </div>
+  <div class="app-body">
+    <div class="sidebar">
+      <div class="sb-item sb-this-machine active">
+        <div class="sb-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="2" y="3" width="12" height="8" rx="1.5"/><path d="M5 13h6"/><path d="M8 11v2"/></svg></div>
+        <div style="flex:1">
+          <span class="sb-label">MacBook Pro</span>
+          <div class="sb-this-label">this machine</div>
+        </div>
+        <span class="sb-status sb-online"></span>
+      </div>
+      <div class="sb-pinned">
+        <div class="sb-pin-item"><span class="sb-pin-star">★</span>Home</div>
+        <div class="sb-pin-item"><span class="sb-pin-star">★</span>Desktop</div>
+        <div class="sb-pin-item"><span class="sb-pin-star">★</span>.claude</div>
+      </div>
+      <div class="sb-bottom">
+        <button class="sb-link-device-btn">Link Your First Device</button>
+      </div>
+    </div>
+    <div class="main">
+      <div class="empty-state">
+        <svg class="empty-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5">
+          <!-- Left laptop -->
+          <rect x="2" y="14" width="18" height="12" rx="2" stroke-dasharray="3 2"/>
+          <path d="M0 26h22" stroke-dasharray="3 2"/>
+          <path d="M6 28h10" stroke-dasharray="3 2"/>
+          <!-- Right laptop -->
+          <rect x="28" y="14" width="18" height="12" rx="2" stroke-dasharray="3 2"/>
+          <path d="M26 26h22" stroke-dasharray="3 2"/>
+          <path d="M32 28h10" stroke-dasharray="3 2"/>
+          <!-- Dashed connection line -->
+          <path d="M20 20h8" stroke-dasharray="2 2" stroke-width="1.2"/>
+        </svg>
+        <div class="empty-title">Welcome to DevMesh</div>
+        <div class="empty-subtitle">Connect your devices to browse, compare, and sync files across machines.</div>
+        <button class="empty-cta">Link Your First Device</button>
+        <div class="empty-hint">Both devices need DevMesh installed</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- ===================== SCREEN 10: WRITE CONFIRMATION DIALOG ===================== -->
+<p class="section-title">Screen 10</p>
+<p class="section-subtitle">Write Confirmation Dialog</p>
+
+<div class="window" style="position:relative;">
+  <div class="titlebar">
+    <div class="traffic-lights"><span class="tl-red"></span><span class="tl-yellow"></span><span class="tl-green"></span></div>
+    <div class="titlebar-center">
+      <div class="titlebar-nav"><button>&#8249;</button><button>&#8250;</button></div>
+      <div class="titlebar-title">maggieyi</div>
+    </div>
+    <div class="titlebar-right">
+      <div class="tb-view-seg">
+        <button class="tb-view-item">&#8862;</button>
+        <button class="tb-view-item active">&#8801;</button>
+        <button class="tb-view-item">&#11007;</button>
+        <button class="tb-view-item">&#8863;</button>
+      </div>
+      <button class="tb-icon-btn">&#8593;</button>
+      <button class="tb-icon-btn">&#8943;</button>
+      <div class="search-wrap"><input class="tb-search" type="text" placeholder="Search"></div>
+    </div>
+  </div>
+  <div class="app-body" style="position:relative;">
+    <div class="sidebar" style="opacity:0.35">
+      <div class="sb-item sb-this-machine active">
+        <div class="sb-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="2" y="3" width="12" height="8" rx="1.5"/><path d="M5 13h6"/><path d="M8 11v2"/></svg></div>
+        <div style="flex:1">
+          <span class="sb-label">MacBook Pro</span>
+          <div class="sb-this-label">this machine</div>
+        </div>
+        <span class="sb-status sb-online"></span>
+      </div>
+    </div>
+    <div class="main" style="opacity:0.5; pointer-events:none;"></div>
+
+    <!-- Dimmed overlay + sheet -->
+    <div class="sheet-overlay" style="border-radius:0;">
+      <div class="wc-sheet">
+        <div class="wc-icon">
+          <svg viewBox="0 0 36 36" fill="none">
+            <path d="M18 3L33 11v14L18 33 3 25V11L18 3z" fill="#FF9500" opacity="0.12"/>
+            <path d="M18 3L33 11v14L18 33 3 25V11L18 3z" stroke="#FF9500" stroke-width="1.5" fill="none"/>
+            <path d="M18 13v8" stroke="#FF9500" stroke-width="2" stroke-linecap="round"/>
+            <circle cx="18" cy="25" r="1.5" fill="#FF9500"/>
+          </svg>
+        </div>
+        <div class="wc-title">Allow file modification?</div>
+        <div class="wc-subtitle">MacBook Pro wants to write files to this machine.</div>
+
+        <div class="wc-file-list">
+          <div class="wc-file-row">
+            <svg viewBox="0 0 16 16"><rect x="3" y="1.5" width="10" height="13" rx="1.5" fill="none" stroke="currentColor" stroke-width="1"/><line x1="5.5" y1="5" x2="10.5" y2="5" stroke="currentColor" stroke-width="0.8"/><line x1="5.5" y1="7.5" x2="10.5" y2="7.5" stroke="currentColor" stroke-width="0.8"/></svg>
+            <span class="wc-file-name">.zshrc</span>
+            <span class="wc-file-path">&#8594; /Users/maggie/.zshrc</span>
+            <span class="wc-file-size">7 KB</span>
+          </div>
+          <div class="wc-file-row">
+            <svg viewBox="0 0 16 16"><rect x="3" y="1.5" width="10" height="13" rx="1.5" fill="none" stroke="currentColor" stroke-width="1"/><line x1="5.5" y1="5" x2="10.5" y2="5" stroke="currentColor" stroke-width="0.8"/><line x1="5.5" y1="7.5" x2="10.5" y2="7.5" stroke="currentColor" stroke-width="0.8"/></svg>
+            <span class="wc-file-name">.gitconfig</span>
+            <span class="wc-file-path">&#8594; /Users/maggie/.gitconfig</span>
+            <span class="wc-file-size">1.2 KB</span>
+          </div>
+          <div class="wc-file-row">
+            <svg viewBox="0 0 16 16"><path d="M1.5 3.5h4l1.5 1.5h7.5v8h-13z" fill="currentColor" opacity="0.15" stroke="currentColor" stroke-width="0.8"/></svg>
+            <span class="wc-file-name">.claude/</span>
+            <span class="wc-file-path">&#8594; /Users/maggie/.claude/</span>
+            <span class="wc-file-size">3 items</span>
+          </div>
+        </div>
+
+        <div class="wc-from">From: MacBook Pro &middot; Permission: Full Access</div>
+
+        <div class="wc-btns">
+          <button class="wc-btn wc-btn-deny">Deny</button>
+          <button class="wc-btn wc-btn-allow">Allow Once</button>
+          <button class="wc-btn wc-btn-primary">Allow Always This Session</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- ===================== SCREEN 11: CONTEXT MENU ===================== -->
+<p class="section-title">Screen 11</p>
+<p class="section-subtitle">Context Menu</p>
+
+<div class="window" style="position:relative;">
+  <div class="titlebar">
+    <div class="traffic-lights"><span class="tl-red"></span><span class="tl-yellow"></span><span class="tl-green"></span></div>
+    <div class="titlebar-center">
+      <div class="titlebar-nav"><button>&#8249;</button><button>&#8250;</button></div>
+      <div class="titlebar-title">maggieyi</div>
+    </div>
+    <div class="titlebar-right">
+      <div class="tb-view-seg">
+        <button class="tb-view-item">&#8862;</button>
+        <button class="tb-view-item active">&#8801;</button>
+        <button class="tb-view-item">&#11007;</button>
+        <button class="tb-view-item">&#8863;</button>
+      </div>
+      <div style="display:flex;background:rgba(0,0,0,0.06);border-radius:6px;padding:2px;gap:1px;">
+        <button style="padding:3px 10px;border:none;background:#fff;border-radius:4px;font-size:11px;color:#1D1D1F;cursor:pointer;font-family:inherit;box-shadow:0 0.5px 2px rgba(0,0,0,0.1);">Send to... &#9662;</button>
+      </div>
+      <button class="tb-icon-btn">&#8593;</button>
+      <button class="tb-icon-btn">&#8943;</button>
+      <div class="search-wrap"><input class="tb-search" type="text" placeholder="Search"></div>
+    </div>
+  </div>
+  <div class="app-body" style="position:relative;">
+    <div class="sidebar">
+      <div class="sb-item sb-this-machine active">
+        <div class="sb-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="2" y="3" width="12" height="8" rx="1.5"/><path d="M5 13h6"/><path d="M8 11v2"/></svg></div>
+        <div style="flex:1">
+          <span class="sb-label">MacBook Pro</span>
+          <div class="sb-this-label">this machine</div>
+        </div>
+        <span class="sb-status sb-online"></span>
+      </div>
+      <div class="sb-pinned">
+        <div class="sb-pin-item"><span class="sb-pin-star">★</span>Home</div>
+        <div class="sb-pin-item"><span class="sb-pin-star">★</span>Desktop</div>
+        <div class="sb-pin-item"><span class="sb-pin-star">★</span>.claude</div>
+      </div>
+      <div class="sb-item sb-item-device">
+        <div class="sb-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="3" y="2" width="10" height="9" rx="1.5"/><path d="M6 13h4"/><path d="M8 11v2"/></svg></div>
+        <div style="flex:1">
+          <span class="sb-label">Mac Mini</span>
+          <div class="sb-device-meta">studio · <span style="color:#34C759">Full</span></div>
+        </div>
+        <span class="sb-status sb-online"></span>
+      </div>
+      <div class="sb-item sb-item-device">
+        <div class="sb-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="3" y="3" width="10" height="10" rx="1.5"/><path d="M3 10h10"/></svg></div>
+        <div style="flex:1">
+          <span class="sb-label">ThinkPad</span>
+          <div class="sb-device-meta">travel · <span style="color:#FF9500">Read</span> · 2h ago</div>
+        </div>
+        <span class="sb-status sb-offline"></span>
+      </div>
+      <div class="sb-divider"></div>
+      <div class="sb-item sb-packs-toggle">
+        <span class="sb-label" style="color:#A0A0A8">▸ Packs</span>
+        <span class="sb-meta">(3)</span>
+      </div>
+      <div class="sb-divider"></div>
+      <div class="sb-bottom"><span class="sb-link"><svg viewBox="0 0 12 12" width="11" height="11" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="6" y1="2" x2="6" y2="10"/><line x1="2" y1="6" x2="10" y2="6"/></svg> Link Device</span></div>
+    </div>
+    <div class="main" style="position:relative;">
+      <div class="path-bar"><span>MacBook Pro</span><span class="sep"> &#8250; </span><span>Users</span><span class="sep"> &#8250; </span><span>maggie</span><span class="sep"> &#8250; </span><span class="current">.claude</span></div>
+      <div class="file-list">
+        <div class="fl-header"><div class="sortable">Name &#9662;</div><div>Date Modified</div><div>Size</div><div>Kind</div></div>
+        <div class="fl-row"><div class="fl-name"><svg viewBox="0 0 16 16" class="icon-folder"><path d="M1.5 3.5h4l1.5 1.5h7.5v8h-13z" fill="currentColor" opacity="0.15" stroke="currentColor" stroke-width="0.8"/></svg>commands</div><div class="fl-meta">Mar 28, 11:30 AM</div><div class="fl-meta">--</div><div class="fl-meta">Folder</div></div>
+        <div class="fl-row"><div class="fl-name"><svg viewBox="0 0 16 16" class="icon-folder"><path d="M1.5 3.5h4l1.5 1.5h7.5v8h-13z" fill="currentColor" opacity="0.15" stroke="currentColor" stroke-width="0.8"/></svg>settings</div><div class="fl-meta">Mar 30, 2:15 PM</div><div class="fl-meta">--</div><div class="fl-meta">Folder</div></div>
+        <div class="fl-row"><div class="fl-name"><svg viewBox="0 0 16 16" class="icon-folder"><path d="M1.5 3.5h4l1.5 1.5h7.5v8h-13z" fill="currentColor" opacity="0.15" stroke="currentColor" stroke-width="0.8"/></svg>skills</div><div class="fl-meta">Apr 1, 9:04 AM</div><div class="fl-meta">--</div><div class="fl-meta">Folder</div></div>
+        <div class="fl-row"><div class="fl-name"><svg viewBox="0 0 16 16" class="icon-doc"><rect x="3" y="1.5" width="10" height="13" rx="1.5" fill="none" stroke="currentColor" stroke-width="1"/><line x1="5.5" y1="5" x2="10.5" y2="5" stroke="currentColor" stroke-width="0.8"/><line x1="5.5" y1="7.5" x2="10.5" y2="7.5" stroke="currentColor" stroke-width="0.8"/><line x1="5.5" y1="10" x2="8.5" y2="10" stroke="currentColor" stroke-width="0.8"/></svg>CLAUDE.md</div><div class="fl-meta">Apr 3, 1:50 PM</div><div class="fl-meta">4.2 KB</div><div class="fl-meta">Markdown</div></div>
+        <div class="fl-row ctx-highlight"><div class="fl-name"><svg viewBox="0 0 16 16" class="icon-config"><rect x="3" y="1.5" width="10" height="13" rx="1.5" fill="none" stroke="currentColor" stroke-width="1"/><text x="8" y="10.5" text-anchor="middle" font-size="6" font-weight="600" fill="currentColor">{}</text></svg>settings.json</div><div class="fl-meta">Apr 2, 4:16 PM</div><div class="fl-meta">1.8 KB</div><div class="fl-meta">JSON</div></div>
+        <div class="fl-row"><div class="fl-name"><svg viewBox="0 0 16 16" class="icon-lock"><rect x="3" y="1.5" width="10" height="13" rx="1.5" fill="none" stroke="currentColor" stroke-width="1"/><circle cx="8" cy="7" r="2" fill="none" stroke="currentColor" stroke-width="0.8"/><line x1="8" y1="9" x2="8" y2="11" stroke="currentColor" stroke-width="0.8"/></svg>.env</div><div class="fl-meta">Mar 15, 3:01 PM</div><div class="fl-meta">256 B</div><div class="fl-meta">Text</div></div>
+        <div class="fl-row"><div class="fl-name"><svg viewBox="0 0 16 16" class="icon-config"><rect x="3" y="1.5" width="10" height="13" rx="1.5" fill="none" stroke="currentColor" stroke-width="1"/><text x="8" y="10.5" text-anchor="middle" font-size="6" font-weight="600" fill="currentColor">{}</text></svg>credentials.json</div><div class="fl-meta">Mar 20, 11:28 AM</div><div class="fl-meta">512 B</div><div class="fl-meta">JSON</div></div>
+        <div class="fl-row"><div class="fl-name"><svg viewBox="0 0 16 16" class="icon-config"><rect x="3" y="1.5" width="10" height="13" rx="1.5" fill="none" stroke="currentColor" stroke-width="1"/><text x="8" y="10.5" text-anchor="middle" font-size="6" font-weight="600" fill="currentColor">{}</text></svg>projects.json</div><div class="fl-meta">Apr 1, 12:47 PM</div><div class="fl-meta">3.1 KB</div><div class="fl-meta">JSON</div></div>
+      </div>
+      <div class="fl-status">8 items, 12.1 KB &middot; Right-click for more actions &middot; Drag to sidebar to copy</div>
+
+      <!-- Context Menu floating over the file list -->
+      <div class="ctx-menu" style="top:148px; left:380px;">
+        <div class="ctx-item">Open</div>
+        <div class="ctx-item ctx-hover">Open With...</div>
+        <div class="ctx-separator"></div>
+        <div class="ctx-item">Copy to...<span class="ctx-submenu-arrow">&#9656;</span></div>
+        <div class="ctx-item">Send to Mac Mini</div>
+        <div class="ctx-item ctx-disabled">Send to ThinkPad</div>
+        <div class="ctx-separator"></div>
+        <div class="ctx-item">Copy Path<span class="ctx-shortcut">&#8984;&#8679;C</span></div>
+        <div class="ctx-item">Reveal in Finder</div>
+        <div class="ctx-separator"></div>
+        <div class="ctx-item">Rename</div>
+        <div class="ctx-item">Get Info<span class="ctx-shortcut">&#8984;I</span></div>
+        <div class="ctx-separator"></div>
+        <div class="ctx-item">Add to Pack...</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- ===================== SCREEN 12: SETTINGS / DEVICE MANAGEMENT ===================== -->
+<p class="section-title">Screen 12</p>
+<p class="section-subtitle">Settings — Device Management</p>
+
+<style>
+  /* Screen 12: Settings layout */
+  .settings-nav { width:180px; background:#FAFAFA; border-right:0.5px solid rgba(0,0,0,0.1); display:flex; flex-direction:column; padding:12px 0; flex-shrink:0; user-select:none; }
+  .settings-nav-item { height:28px; display:flex; align-items:center; padding:0 16px; font-size:13px; color:#1D1D1F; cursor:pointer; border-radius:5px; margin:0 8px 1px; transition:background 0.1s; }
+  .settings-nav-item:hover { background:rgba(0,0,0,0.04); }
+  .settings-nav-item.active { background:#007AFF; color:#fff; }
+  .settings-main { flex:1; overflow-y:auto; display:flex; justify-content:center; background:#fff; }
+  .settings-content { max-width:640px; width:100%; padding:32px; }
+  .settings-content h2 { font-size:20px; font-weight:600; margin-bottom:20px; }
+
+  /* Device cards */
+  .device-card { background:#F5F5F7; border-radius:10px; padding:16px; margin-bottom:12px; }
+  .device-card-header { display:flex; align-items:center; gap:10px; margin-bottom:12px; }
+  .device-card-icon { width:32px; height:32px; background:rgba(0,122,255,0.08); border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .device-card-icon svg { width:18px; height:18px; color:#007AFF; }
+  .device-card-name { font-size:15px; font-weight:600; }
+  .device-card-alias { font-size:12px; color:#86868B; margin-left:2px; }
+  .device-card-status { margin-left:auto; display:flex; align-items:center; gap:5px; font-size:12px; font-weight:500; }
+  .device-card-status .dot { width:7px; height:7px; border-radius:50%; flex-shrink:0; }
+  .device-card-status .dot-green { background:#34C759; }
+  .device-card-status .dot-gray { background:#C7C7CC; }
+
+  .device-card-rows { display:flex; flex-direction:column; gap:2px; margin-bottom:12px; }
+  .device-card-row { height:24px; display:flex; align-items:center; font-size:12px; color:#86868B; gap:6px; }
+  .device-card-row .row-label { min-width:80px; }
+  .device-card-row .row-value { color:#1D1D1F; }
+
+  .device-pill { display:inline-flex; align-items:center; font-size:11px; font-weight:600; padding:2px 8px; border-radius:4px; cursor:pointer; }
+  .pill-green { background:rgba(52,199,89,0.15); color:#34C759; }
+  .pill-orange { background:rgba(255,149,0,0.15); color:#FF9500; }
+  .pill-blue { background:rgba(0,122,255,0.1); color:#007AFF; }
+  .pill-amber { background:rgba(255,149,0,0.12); color:#FF9500; font-weight:500; font-size:11px; padding:2px 8px; border-radius:4px; display:inline-flex; }
+
+  .device-card-actions { display:flex; justify-content:space-between; align-items:center; padding-top:10px; border-top:0.5px solid rgba(0,0,0,0.06); }
+  .device-card-actions a { font-size:12px; font-weight:500; cursor:pointer; text-decoration:none; }
+  .device-card-actions a:hover { text-decoration:underline; }
+  .action-link-blue { color:#007AFF; }
+  .action-link-red { color:#FF3B30; }
+
+  /* Screen 13: Grouped sidebar badges */
+  .sb-perm-badge { font-size:9px; font-weight:600; padding:1px 5px; border-radius:4px; margin-left:auto; flex-shrink:0; }
+  .sb-perm-full { background:rgba(52,199,89,0.15); color:#34C759; }
+  .sb-perm-read { background:rgba(255,149,0,0.15); color:#FF9500; }
+  .sb-perm-browse { background:rgba(0,122,255,0.1); color:#007AFF; }
+  .sb-pending-pill { font-size:9px; font-weight:600; padding:1px 5px; border-radius:4px; background:rgba(255,149,0,0.12); color:#FF9500; margin-left:4px; flex-shrink:0; }
+  .sb-expiry { font-size:10px; color:#FF9500; padding:0 12px 0 37px; margin-top:-2px; margin-bottom:2px; }
+
+  /* Screen 14: Diff color coded file browser */
+  .fl-diff-dot { width:7px; height:7px; border-radius:50%; flex-shrink:0; margin-right:2px; }
+  .fl-diff-identical { background:#34C759; }
+  .fl-diff-differs { background:#FF9500; }
+  .fl-diff-missing { background:#FF3B30; }
+  .fl-local-only-tag { font-size:9px; color:#FF3B30; background:rgba(255,59,48,0.1); padding:1px 5px; border-radius:3px; margin-left:6px; font-weight:500; }
+</style>
+
+<div class="window">
+  <div class="titlebar">
+    <div class="traffic-lights"><span class="tl-red"></span><span class="tl-yellow"></span><span class="tl-green"></span></div>
+    <div class="titlebar-center">
+      <div class="titlebar-title">DevMesh — Settings</div>
+    </div>
+    <div class="titlebar-right">
+      <button class="tb-icon-btn">⋯</button>
+    </div>
+  </div>
+  <div class="app-body">
+    <div class="settings-nav">
+      <div class="settings-nav-item">General</div>
+      <div class="settings-nav-item active">Devices</div>
+      <div class="settings-nav-item">Transfers</div>
+      <div class="settings-nav-item">Appearance</div>
+      <div class="settings-nav-item">About</div>
+    </div>
+    <div class="settings-main">
+      <div class="settings-content">
+        <h2>Devices</h2>
+
+        <!-- Device Card 1: Mac Mini (studio) -->
+        <div class="device-card">
+          <div class="device-card-header">
+            <div class="device-card-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="3" y="2" width="10" height="9" rx="1.5"/><path d="M6 13h4"/><path d="M8 11v2"/></svg></div>
+            <div><span class="device-card-name">Mac Mini</span><span class="device-card-alias">(studio)</span></div>
+            <div class="device-card-status"><span class="dot dot-green"></span><span style="color:#34C759;">Online</span></div>
+          </div>
+          <div class="device-card-rows">
+            <div class="device-card-row"><span class="row-label">Permission:</span><span class="device-pill pill-green">Full Access ▾</span></div>
+            <div class="device-card-row"><span class="row-label">Group:</span><span class="device-pill pill-blue">Personal ▾</span></div>
+            <div class="device-card-row"><span class="row-label">Directories:</span><span class="row-value">All directories</span></div>
+            <div class="device-card-row"><span class="row-label">Paired:</span><span class="row-value">Mar 28, 2026</span></div>
+            <div class="device-card-row"><span class="row-label">Last seen:</span><span class="row-value">Just now</span></div>
+          </div>
+          <div class="device-card-actions">
+            <a class="action-link-blue">Manage Directories</a>
+            <a class="action-link-red">Unpair Device</a>
+          </div>
+        </div>
+
+        <!-- Device Card 2: ThinkPad (travel) -->
+        <div class="device-card">
+          <div class="device-card-header">
+            <div class="device-card-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="3" y="3" width="10" height="10" rx="1.5"/><path d="M3 10h10"/></svg></div>
+            <div><span class="device-card-name">ThinkPad</span><span class="device-card-alias">(travel)</span></div>
+            <div class="device-card-status"><span class="dot dot-gray"></span><span style="color:#86868B;">Offline · 2h ago</span></div>
+          </div>
+          <div class="device-card-rows">
+            <div class="device-card-row"><span class="row-label">Permission:</span><span class="device-pill pill-orange">Read + Copy ▾</span></div>
+            <div class="device-card-row"><span class="row-label">Group:</span><span class="device-pill pill-blue">Personal ▾</span></div>
+            <div class="device-card-row"><span class="row-label">Transfers:</span><span class="pill-amber">2 transfers queued</span></div>
+          </div>
+          <div class="device-card-actions">
+            <a class="action-link-blue">Manage Directories</a>
+            <a class="action-link-red">Unpair Device</a>
+          </div>
+        </div>
+
+        <!-- Device Card 3: Sarah's MacBook -->
+        <div class="device-card">
+          <div class="device-card-header">
+            <div class="device-card-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="2" y="3" width="12" height="8" rx="1.5"/><path d="M5 13h6"/><path d="M8 11v2"/></svg></div>
+            <div><span class="device-card-name">Sarah's MacBook</span></div>
+            <div class="device-card-status"><span class="dot dot-green"></span><span style="color:#34C759;">Online</span></div>
+          </div>
+          <div class="device-card-rows">
+            <div class="device-card-row"><span class="row-label">Permission:</span><span class="device-pill pill-blue">Browse Only ▾</span></div>
+            <div class="device-card-row"><span class="row-label">Group:</span><span class="device-pill pill-blue">Temp ▾</span></div>
+            <div class="device-card-row"><span class="row-label">Expires:</span><span class="row-value" style="color:#FF9500;">in 22 hours</span></div>
+            <div class="device-card-row"><span class="row-label">Directories:</span><span class="row-value">~/.claude/ only</span></div>
+          </div>
+          <div class="device-card-actions">
+            <a class="action-link-blue">Extend Expiration</a>
+            <a class="action-link-blue" style="margin-left:auto; margin-right:12px;">Manage Directories</a>
+            <a class="action-link-red">Unpair Device</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- ===================== SCREEN 13: LABELED SIDEBAR GROUPS ===================== -->
+<p class="section-title">Screen 13</p>
+<p class="section-subtitle">Labeled Sidebar Groups</p>
+
+<div class="window">
+  <div class="titlebar">
+    <div class="traffic-lights"><span class="tl-red"></span><span class="tl-yellow"></span><span class="tl-green"></span></div>
+    <div class="titlebar-center">
+      <div class="titlebar-nav"><button>‹</button><button>›</button></div>
+      <div class="titlebar-title">maggieyi</div>
+    </div>
+    <div class="titlebar-right">
+      <div class="tb-view-seg">
+        <button class="tb-view-item">⊞</button>
+        <button class="tb-view-item active">≡</button>
+        <button class="tb-view-item">⫿</button>
+        <button class="tb-view-item">⊟</button>
+      </div>
+      <div style="display:flex;background:rgba(0,0,0,0.06);border-radius:6px;padding:2px;gap:1px;">
+        <button style="padding:3px 10px;border:none;background:#fff;border-radius:4px;font-size:11px;color:#1D1D1F;cursor:pointer;font-family:inherit;box-shadow:0 0.5px 2px rgba(0,0,0,0.1);">Send to... ▾</button>
+      </div>
+      <button class="tb-icon-btn">↑</button>
+      <button class="tb-icon-btn">⋯</button>
+      <div class="search-wrap"><input class="tb-search" type="text" placeholder="Search"></div>
+    </div>
+  </div>
+  <div class="app-body">
+    <div class="sidebar">
+      <!-- This machine -->
+      <div class="sb-item sb-this-machine active">
+        <div class="sb-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="2" y="3" width="12" height="8" rx="1.5"/><path d="M5 13h6"/><path d="M8 11v2"/></svg></div>
+        <div style="flex:1">
+          <span class="sb-label">MacBook Pro</span>
+          <div class="sb-this-label">this machine</div>
+        </div>
+        <span class="sb-status sb-online"></span>
+      </div>
+      <div class="sb-pinned">
+        <div class="sb-pin-item"><span class="sb-pin-star">★</span>Home</div>
+        <div class="sb-pin-item"><span class="sb-pin-star">★</span>Desktop</div>
+        <div class="sb-pin-item"><span class="sb-pin-star">★</span>.claude</div>
+      </div>
+
+      <!-- Group: Personal -->
+      <div class="sb-section">Personal</div>
+      <div class="sb-item sb-item-device">
+        <div class="sb-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="3" y="2" width="10" height="9" rx="1.5"/><path d="M6 13h4"/><path d="M8 11v2"/></svg></div>
+        <div style="flex:1">
+          <span class="sb-label">Mac Mini</span>
+          <div class="sb-device-meta">studio · <span style="color:#34C759">Full</span></div>
+        </div>
+        <span class="sb-status sb-online"></span>
+      </div>
+      <div class="sb-item sb-item-device">
+        <div class="sb-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="3" y="3" width="10" height="10" rx="1.5"/><path d="M3 10h10"/></svg></div>
+        <div style="flex:1">
+          <span class="sb-label">ThinkPad</span>
+          <div class="sb-device-meta">travel · <span style="color:#FF9500">Read</span> · 2h ago</div>
+        </div>
+        <span class="sb-status sb-offline"></span>
+      </div>
+
+      <!-- Group: Work -->
+      <div class="sb-section">Work</div>
+      <div class="sb-item">
+        <div class="sb-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="4" y="2" width="8" height="12" rx="1.5"/><circle cx="8" cy="12" r="0.8" fill="currentColor"/></svg></div>
+        <div style="flex:1">
+          <span class="sb-label">staging-srv</span>
+          <div class="sb-device-meta"><span style="color:#FF9500">Read</span></div>
+        </div>
+        <span class="sb-status sb-online"></span>
+      </div>
+      <div class="sb-item">
+        <div class="sb-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="2" y="3" width="12" height="8" rx="1.5"/><path d="M5 13h6"/><path d="M8 11v2"/></svg></div>
+        <div style="flex:1">
+          <span class="sb-label">alice-mbp</span>
+          <div class="sb-device-meta"><span style="color:#007AFF">Browse</span></div>
+        </div>
+        <span class="sb-status sb-online"></span>
+      </div>
+
+      <!-- Group: Temp -->
+      <div class="sb-section">Temp</div>
+      <div class="sb-item">
+        <div class="sb-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="2" y="3" width="12" height="8" rx="1.5"/><path d="M5 13h6"/><path d="M8 11v2"/></svg></div>
+        <div style="flex:1">
+          <span class="sb-label">bob-laptop</span>
+          <div class="sb-device-meta"><span style="color:#FF9500">Read</span> · 22h left</div>
+        </div>
+        <span class="sb-status sb-online"></span>
+      </div>
+
+      <div class="sb-divider"></div>
+      <div class="sb-item sb-packs-toggle">
+        <span class="sb-label" style="color:#A0A0A8">▸ Packs</span>
+        <span class="sb-meta">(3)</span>
+      </div>
+      <div class="sb-divider"></div>
+      <div class="sb-bottom"><span class="sb-link"><svg viewBox="0 0 12 12" width="11" height="11" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="6" y1="2" x2="6" y2="10"/><line x1="2" y1="6" x2="10" y2="6"/></svg> Link Device</span></div>
+    </div>
+    <div class="main">
+      <div class="path-bar"><span>MacBook Pro</span><span class="sep"> › </span><span>Users</span><span class="sep"> › </span><span>maggie</span><span class="sep"> › </span><span class="current">.claude</span></div>
+      <div class="file-list">
+        <div class="fl-header"><div class="sortable">Name ▾</div><div>Date Modified</div><div>Size</div><div>Kind</div></div>
+        <div class="fl-row"><div class="fl-name"><svg viewBox="0 0 16 16" class="icon-folder"><path d="M1.5 3.5h4l1.5 1.5h7.5v8h-13z" fill="currentColor" opacity="0.15" stroke="currentColor" stroke-width="0.8"/></svg>commands</div><div class="fl-meta">Mar 28, 11:30 AM</div><div class="fl-meta">--</div><div class="fl-meta">Folder</div></div>
+        <div class="fl-row"><div class="fl-name"><svg viewBox="0 0 16 16" class="icon-folder"><path d="M1.5 3.5h4l1.5 1.5h7.5v8h-13z" fill="currentColor" opacity="0.15" stroke="currentColor" stroke-width="0.8"/></svg>settings</div><div class="fl-meta">Mar 30, 2:15 PM</div><div class="fl-meta">--</div><div class="fl-meta">Folder</div></div>
+        <div class="fl-row"><div class="fl-name"><svg viewBox="0 0 16 16" class="icon-folder"><path d="M1.5 3.5h4l1.5 1.5h7.5v8h-13z" fill="currentColor" opacity="0.15" stroke="currentColor" stroke-width="0.8"/></svg>skills</div><div class="fl-meta">Apr 1, 9:04 AM</div><div class="fl-meta">--</div><div class="fl-meta">Folder</div></div>
+        <div class="fl-row selected"><div class="fl-name"><svg viewBox="0 0 16 16" class="icon-doc"><rect x="3" y="1.5" width="10" height="13" rx="1.5" fill="none" stroke="currentColor" stroke-width="1"/><line x1="5.5" y1="5" x2="10.5" y2="5" stroke="currentColor" stroke-width="0.8"/><line x1="5.5" y1="7.5" x2="10.5" y2="7.5" stroke="currentColor" stroke-width="0.8"/><line x1="5.5" y1="10" x2="8.5" y2="10" stroke="currentColor" stroke-width="0.8"/></svg>CLAUDE.md</div><div class="fl-meta">Apr 3, 1:50 PM</div><div class="fl-meta">4.2 KB</div><div class="fl-meta">Markdown</div></div>
+        <div class="fl-row"><div class="fl-name"><svg viewBox="0 0 16 16" class="icon-config"><rect x="3" y="1.5" width="10" height="13" rx="1.5" fill="none" stroke="currentColor" stroke-width="1"/><text x="8" y="10.5" text-anchor="middle" font-size="6" font-weight="600" fill="currentColor">{}</text></svg>settings.json</div><div class="fl-meta">Apr 2, 4:16 PM</div><div class="fl-meta">1.8 KB</div><div class="fl-meta">JSON</div></div>
+        <div class="fl-row"><div class="fl-name"><svg viewBox="0 0 16 16" class="icon-lock"><rect x="3" y="1.5" width="10" height="13" rx="1.5" fill="none" stroke="currentColor" stroke-width="1"/><circle cx="8" cy="7" r="2" fill="none" stroke="currentColor" stroke-width="0.8"/><line x1="8" y1="9" x2="8" y2="11" stroke="currentColor" stroke-width="0.8"/></svg>.env</div><div class="fl-meta">Mar 15, 3:01 PM</div><div class="fl-meta">256 B</div><div class="fl-meta">Text</div></div>
+        <div class="fl-row"><div class="fl-name"><svg viewBox="0 0 16 16" class="icon-config"><rect x="3" y="1.5" width="10" height="13" rx="1.5" fill="none" stroke="currentColor" stroke-width="1"/><text x="8" y="10.5" text-anchor="middle" font-size="6" font-weight="600" fill="currentColor">{}</text></svg>credentials.json</div><div class="fl-meta">Mar 20, 11:28 AM</div><div class="fl-meta">512 B</div><div class="fl-meta">JSON</div></div>
+        <div class="fl-row"><div class="fl-name"><svg viewBox="0 0 16 16" class="icon-config"><rect x="3" y="1.5" width="10" height="13" rx="1.5" fill="none" stroke="currentColor" stroke-width="1"/><text x="8" y="10.5" text-anchor="middle" font-size="6" font-weight="600" fill="currentColor">{}</text></svg>projects.json</div><div class="fl-meta">Apr 1, 12:47 PM</div><div class="fl-meta">3.1 KB</div><div class="fl-meta">JSON</div></div>
+      </div>
+      <div class="fl-status">8 items, 12.1 KB · Right-click for more actions · Drag to sidebar to copy</div>
+    </div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- ===================== SCREEN 14: FILE BROWSER WITH DIFF COLOR CODING ===================== -->
+<p class="section-title">Screen 14</p>
+<p class="section-subtitle">File Browser with Diff Color Coding</p>
+
+<div class="window">
+  <div class="titlebar">
+    <div class="traffic-lights"><span class="tl-red"></span><span class="tl-yellow"></span><span class="tl-green"></span></div>
+    <div class="titlebar-center">
+      <div class="titlebar-nav"><button>‹</button><button>›</button></div>
+      <div class="titlebar-title">maggieyi</div>
+    </div>
+    <div class="titlebar-right">
+      <div class="tb-view-seg">
+        <button class="tb-view-item">⊞</button>
+        <button class="tb-view-item active">≡</button>
+        <button class="tb-view-item">⫿</button>
+        <button class="tb-view-item">⊟</button>
+      </div>
+      <div style="display:flex;background:rgba(0,0,0,0.06);border-radius:6px;padding:2px;gap:1px;">
+        <button style="padding:3px 10px;border:none;background:#fff;border-radius:4px;font-size:11px;color:#1D1D1F;cursor:pointer;font-family:inherit;box-shadow:0 0.5px 2px rgba(0,0,0,0.1);">Send to... ▾</button>
+      </div>
+      <button class="tb-icon-btn">↑</button>
+      <button class="tb-icon-btn">⋯</button>
+      <div class="search-wrap"><input class="tb-search" type="text" placeholder="Search"></div>
+    </div>
+  </div>
+  <div class="app-body">
+    <div class="sidebar">
+      <div class="sb-item sb-this-machine">
+        <div class="sb-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="2" y="3" width="12" height="8" rx="1.5"/><path d="M5 13h6"/><path d="M8 11v2"/></svg></div>
+        <div style="flex:1">
+          <span class="sb-label">MacBook Pro</span>
+          <div class="sb-this-label">this machine</div>
+        </div>
+        <span class="sb-status sb-online"></span>
+      </div>
+      <div class="sb-pinned">
+        <div class="sb-pin-item"><span class="sb-pin-star">★</span>Home</div>
+        <div class="sb-pin-item"><span class="sb-pin-star">★</span>Desktop</div>
+        <div class="sb-pin-item"><span class="sb-pin-star">★</span>.claude</div>
+      </div>
+      <div class="sb-item active">
+        <div class="sb-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="3" y="2" width="10" height="9" rx="1.5"/><path d="M6 13h4"/><path d="M8 11v2"/></svg></div>
+        <div style="flex:1">
+          <span class="sb-label">Mac Mini</span>
+          <div class="sb-device-meta">studio · <span style="color:#34C759">Full</span></div>
+        </div>
+        <span class="sb-status sb-online"></span>
+      </div>
+      <div class="sb-item sb-item-device">
+        <div class="sb-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="3" y="3" width="10" height="10" rx="1.5"/><path d="M3 10h10"/></svg></div>
+        <div style="flex:1">
+          <span class="sb-label">ThinkPad</span>
+          <div class="sb-device-meta">travel · <span style="color:#FF9500">Read</span> · 2h ago</div>
+        </div>
+        <span class="sb-status sb-offline"></span>
+      </div>
+      <div class="sb-divider"></div>
+      <div class="sb-item sb-packs-toggle">
+        <span class="sb-label" style="color:#A0A0A8">▸ Packs</span>
+        <span class="sb-meta">(3)</span>
+      </div>
+      <div class="sb-divider"></div>
+      <div class="sb-bottom"><span class="sb-link"><svg viewBox="0 0 12 12" width="11" height="11" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="6" y1="2" x2="6" y2="10"/><line x1="2" y1="6" x2="10" y2="6"/></svg> Link Device</span></div>
+    </div>
+    <div class="main">
+      <div class="path-bar"><span>Mac Mini</span><span class="sep"> › </span><span>Users</span><span class="sep"> › </span><span>maggie</span><span class="sep"> › </span><span class="current">.claude</span></div>
+      <div class="file-list">
+        <div class="fl-header"><div class="sortable">Name ▾</div><div>Date Modified</div><div>Size</div><div>Kind</div></div>
+        <div class="fl-row"><div class="fl-name"><span class="fl-diff-dot fl-diff-identical"></span><svg viewBox="0 0 16 16" class="icon-folder"><path d="M1.5 3.5h4l1.5 1.5h7.5v8h-13z" fill="currentColor" opacity="0.15" stroke="currentColor" stroke-width="0.8"/></svg>commands</div><div class="fl-meta">Mar 28, 11:30 AM</div><div class="fl-meta">--</div><div class="fl-meta">Folder</div></div>
+        <div class="fl-row"><div class="fl-name"><span class="fl-diff-dot fl-diff-identical"></span><svg viewBox="0 0 16 16" class="icon-folder"><path d="M1.5 3.5h4l1.5 1.5h7.5v8h-13z" fill="currentColor" opacity="0.15" stroke="currentColor" stroke-width="0.8"/></svg>settings</div><div class="fl-meta">Mar 30, 2:15 PM</div><div class="fl-meta">--</div><div class="fl-meta">Folder</div></div>
+        <div class="fl-row"><div class="fl-name"><span class="fl-diff-dot fl-diff-differs"></span><svg viewBox="0 0 16 16" class="icon-folder"><path d="M1.5 3.5h4l1.5 1.5h7.5v8h-13z" fill="currentColor" opacity="0.15" stroke="currentColor" stroke-width="0.8"/></svg>skills</div><div class="fl-meta">Apr 1, 9:04 AM</div><div class="fl-meta">--</div><div class="fl-meta">Folder</div></div>
+        <div class="fl-row"><div class="fl-name"><span class="fl-diff-dot fl-diff-differs"></span><svg viewBox="0 0 16 16" class="icon-doc"><rect x="3" y="1.5" width="10" height="13" rx="1.5" fill="none" stroke="currentColor" stroke-width="1"/><line x1="5.5" y1="5" x2="10.5" y2="5" stroke="currentColor" stroke-width="0.8"/><line x1="5.5" y1="7.5" x2="10.5" y2="7.5" stroke="currentColor" stroke-width="0.8"/><line x1="5.5" y1="10" x2="8.5" y2="10" stroke="currentColor" stroke-width="0.8"/></svg>CLAUDE.md</div><div class="fl-meta">Apr 3, 1:50 PM</div><div class="fl-meta">4.2 KB</div><div class="fl-meta">Markdown</div></div>
+        <div class="fl-row"><div class="fl-name"><span class="fl-diff-dot fl-diff-identical"></span><svg viewBox="0 0 16 16" class="icon-config"><rect x="3" y="1.5" width="10" height="13" rx="1.5" fill="none" stroke="currentColor" stroke-width="1"/><text x="8" y="10.5" text-anchor="middle" font-size="6" font-weight="600" fill="currentColor">{}</text></svg>settings.json</div><div class="fl-meta">Apr 2, 4:16 PM</div><div class="fl-meta">1.8 KB</div><div class="fl-meta">JSON</div></div>
+        <div class="fl-row"><div class="fl-name"><span class="fl-diff-dot fl-diff-missing"></span><svg viewBox="0 0 16 16" class="icon-lock"><rect x="3" y="1.5" width="10" height="13" rx="1.5" fill="none" stroke="currentColor" stroke-width="1"/><circle cx="8" cy="7" r="2" fill="none" stroke="currentColor" stroke-width="0.8"/><line x1="8" y1="9" x2="8" y2="11" stroke="currentColor" stroke-width="0.8"/></svg>.env<span class="fl-local-only-tag">Local only</span></div><div class="fl-meta">Mar 15, 3:01 PM</div><div class="fl-meta">256 B</div><div class="fl-meta">Text</div></div>
+      </div>
+      <div class="fl-status">6 items · 3 identical · 2 differ · 1 missing locally</div>
+    </div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- ===================== SCREEN 15: MESHDROP (AirDrop Equivalent) ===================== -->
+<p class="section-title">Screen 15</p>
+<p class="section-subtitle">MeshDrop — Quick Share</p>
+<p class="section-desc">AirDrop-style quick share overlay. Triggered by ⌘⇧D, dragging files with no target, or clicking "Send to..." in the toolbar. Shows paired devices as visual targets. Drop files onto a device or select and click.</p>
+
+<style>
+  /* MeshDrop overlay */
+  .meshdrop-overlay { position:absolute; inset:0; background:rgba(0,0,0,0.4); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); display:flex; align-items:center; justify-content:center; z-index:20; }
+  .meshdrop-panel { width:480px; background:rgba(255,255,255,0.95); backdrop-filter:blur(20px); border-radius:16px; padding:28px 32px 24px; box-shadow:0 20px 60px rgba(0,0,0,0.2); text-align:center; }
+  .meshdrop-title { font-size:17px; font-weight:600; color:#1D1D1F; margin-bottom:4px; }
+  .meshdrop-subtitle { font-size:13px; color:#86868B; margin-bottom:24px; }
+  .meshdrop-files { display:flex; align-items:center; justify-content:center; gap:6px; margin-bottom:20px; padding:8px 16px; background:#F5F5F7; border-radius:8px; display:inline-flex; }
+  .meshdrop-file-icon { width:20px; height:20px; color:#86868B; }
+  .meshdrop-file-name { font-size:12px; font-weight:500; color:#1D1D1F; font-family:'SF Mono',SFMono-Regular,ui-monospace,monospace; }
+  .meshdrop-file-count { font-size:11px; color:#86868B; }
+
+  /* Device grid */
+  .meshdrop-devices { display:flex; justify-content:center; gap:24px; margin-bottom:24px; }
+  .meshdrop-device { display:flex; flex-direction:column; align-items:center; gap:8px; cursor:pointer; padding:12px; border-radius:12px; transition:all 0.15s; width:100px; }
+  .meshdrop-device:hover { background:rgba(0,122,255,0.06); }
+  .meshdrop-device.sending { pointer-events:none; }
+  .meshdrop-device.done { pointer-events:none; }
+
+  /* Device icon circle */
+  .meshdrop-icon-circle { width:64px; height:64px; border-radius:50%; background:#F0F0F0; display:flex; align-items:center; justify-content:center; position:relative; transition:all 0.2s; }
+  .meshdrop-device:hover .meshdrop-icon-circle { background:#E8F2FF; border-color:rgba(0,122,255,0.3); }
+  .meshdrop-icon-circle svg { width:28px; height:28px; color:#86868B; }
+  .meshdrop-device:hover .meshdrop-icon-circle svg { color:#007AFF; }
+
+  /* Progress ring (shown during transfer) */
+  .meshdrop-progress { position:absolute; inset:-3px; width:70px; height:70px; }
+  .meshdrop-progress circle { fill:none; stroke-width:2.5; stroke-linecap:round; transform:rotate(-90deg); transform-origin:center; }
+  .progress-bg { stroke:rgba(0,0,0,0.06); }
+  .progress-fill { stroke:#007AFF; stroke-dasharray:197; transition:stroke-dashoffset 0.3s; }
+
+  /* Done checkmark */
+  .meshdrop-check { position:absolute; bottom:-2px; right:-2px; width:22px; height:22px; background:#34C759; border-radius:50%; display:flex; align-items:center; justify-content:center; border:2px solid #fff; }
+  .meshdrop-check svg { width:12px; height:12px; color:#fff; }
+
+  /* Device label */
+  .meshdrop-device-name { font-size:12px; font-weight:500; color:#1D1D1F; }
+  .meshdrop-device-status { font-size:10px; color:#86868B; }
+  .meshdrop-device-status.offline { color:#C7C7CC; }
+
+  /* Drop zone */
+  .meshdrop-dropzone { border:2px dashed #C7C7CC; border-radius:10px; padding:16px; margin-bottom:16px; transition:all 0.15s; }
+  .meshdrop-dropzone.active { border-color:#007AFF; background:rgba(0,122,255,0.04); }
+  .meshdrop-dropzone-text { font-size:12px; color:#C7C7CC; }
+
+  /* Shortcut hint */
+  .meshdrop-hint { font-size:11px; color:#C7C7CC; }
+  .meshdrop-hint kbd { display:inline-block; padding:1px 5px; background:#F0F0F0; border:0.5px solid #D5D5D5; border-radius:4px; font-family:inherit; font-size:10px; color:#86868B; }
+</style>
+
+<!-- Screen 15A: MeshDrop with selected files, ready to send -->
+<div class="window" style="position:relative">
+  <div class="titlebar">
+    <div class="traffic-lights"><span class="tl-red"></span><span class="tl-yellow"></span><span class="tl-green"></span></div>
+    <div class="titlebar-center"><div class="titlebar-title">DevMesh</div></div>
+  </div>
+  <div class="app-body" style="position:relative">
+    <div class="sidebar" style="opacity:0.25">
+      <div class="sb-item sb-this-machine"><div style="flex:1"><span class="sb-label">MacBook Pro</span></div></div>
+    </div>
+    <div class="main" style="opacity:0.25"><div style="flex:1"></div></div>
+    <div class="meshdrop-overlay">
+      <div class="meshdrop-panel">
+        <div class="meshdrop-title">MeshDrop</div>
+        <div class="meshdrop-subtitle">Send files to a device in your mesh</div>
+
+        <!-- Selected files badge -->
+        <div style="display:flex;justify-content:center;margin-bottom:20px;">
+          <div class="meshdrop-files">
+            <svg class="meshdrop-file-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="1.5" width="10" height="13" rx="1.5"/></svg>
+            <span class="meshdrop-file-name">settings.json</span>
+            <span class="meshdrop-file-count">+ 2 more</span>
+          </div>
+        </div>
+
+        <!-- Device grid -->
+        <div class="meshdrop-devices">
+          <!-- Mac Mini - available -->
+          <div class="meshdrop-device">
+            <div class="meshdrop-icon-circle">
+              <svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.3"><rect x="4" y="4" width="20" height="14" rx="2.5"/><path d="M10 20h8"/><path d="M14 18v2"/></svg>
+            </div>
+            <span class="meshdrop-device-name">Mac Mini</span>
+            <span class="meshdrop-device-status">studio · online</span>
+          </div>
+
+          <!-- ThinkPad - offline (will queue) -->
+          <div class="meshdrop-device">
+            <div class="meshdrop-icon-circle" style="opacity:0.5">
+              <svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.3"><rect x="4" y="5" width="20" height="16" rx="2.5"/><path d="M4 17h20"/></svg>
+            </div>
+            <span class="meshdrop-device-name">ThinkPad</span>
+            <span class="meshdrop-device-status offline">offline · will queue</span>
+          </div>
+
+          <!-- Alice - browse only (can't receive) -->
+          <div class="meshdrop-device" style="opacity:0.35;pointer-events:none;">
+            <div class="meshdrop-icon-circle">
+              <svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.3"><rect x="4" y="4" width="20" height="14" rx="2.5"/><path d="M10 20h8"/><path d="M14 18v2"/></svg>
+            </div>
+            <span class="meshdrop-device-name">alice-mbp</span>
+            <span class="meshdrop-device-status" style="color:#FF9500;">Browse only</span>
+          </div>
+        </div>
+
+        <!-- Or drop zone -->
+        <div class="meshdrop-dropzone">
+          <div class="meshdrop-dropzone-text">or drag more files here</div>
+        </div>
+
+        <div class="meshdrop-hint"><kbd>⌘</kbd> <kbd>⇧</kbd> <kbd>D</kbd> to open MeshDrop · <kbd>esc</kbd> to close</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div style="height:24px"></div>
+
+<!-- Screen 15B: MeshDrop during transfer (progress state) -->
+<p class="section-desc">Transfer in progress — Mac Mini shows progress ring, ThinkPad is queued (offline).</p>
+
+<div class="window" style="position:relative">
+  <div class="titlebar">
+    <div class="traffic-lights"><span class="tl-red"></span><span class="tl-yellow"></span><span class="tl-green"></span></div>
+    <div class="titlebar-center"><div class="titlebar-title">DevMesh</div></div>
+  </div>
+  <div class="app-body" style="position:relative">
+    <div class="sidebar" style="opacity:0.25">
+      <div class="sb-item sb-this-machine"><div style="flex:1"><span class="sb-label">MacBook Pro</span></div></div>
+    </div>
+    <div class="main" style="opacity:0.25"><div style="flex:1"></div></div>
+    <div class="meshdrop-overlay">
+      <div class="meshdrop-panel">
+        <div class="meshdrop-title">Sending...</div>
+        <div class="meshdrop-subtitle">3 files · 12.4 KB</div>
+
+        <div style="display:flex;justify-content:center;margin-bottom:20px;">
+          <div class="meshdrop-files">
+            <svg class="meshdrop-file-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="1.5" width="10" height="13" rx="1.5"/></svg>
+            <span class="meshdrop-file-name">settings.json, CLAUDE.md, .env</span>
+          </div>
+        </div>
+
+        <div class="meshdrop-devices">
+          <!-- Mac Mini - sending (progress ring at 65%) -->
+          <div class="meshdrop-device sending">
+            <div class="meshdrop-icon-circle" style="background:#E8F2FF;">
+              <svg viewBox="0 0 28 28" fill="none" stroke="#007AFF" stroke-width="1.3"><rect x="4" y="4" width="20" height="14" rx="2.5"/><path d="M10 20h8"/><path d="M14 18v2"/></svg>
+              <svg class="meshdrop-progress" viewBox="0 0 70 70">
+                <circle class="progress-bg" cx="35" cy="35" r="31.5"/>
+                <circle class="progress-fill" cx="35" cy="35" r="31.5" stroke-dashoffset="69"/>
+              </svg>
+            </div>
+            <span class="meshdrop-device-name" style="color:#007AFF">Mac Mini</span>
+            <span class="meshdrop-device-status" style="color:#007AFF">65% · 8 KB/s</span>
+          </div>
+
+          <!-- ThinkPad - queued -->
+          <div class="meshdrop-device">
+            <div class="meshdrop-icon-circle" style="opacity:0.5">
+              <svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.3"><rect x="4" y="5" width="20" height="16" rx="2.5"/><path d="M4 17h20"/></svg>
+            </div>
+            <span class="meshdrop-device-name">ThinkPad</span>
+            <span class="meshdrop-device-status" style="color:#FF9500">queued</span>
+          </div>
+        </div>
+
+        <div class="meshdrop-hint" style="margin-top:8px;">Transferring to Mac Mini · ThinkPad will receive when online</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div style="height:24px"></div>
+
+<!-- Screen 15C: MeshDrop complete -->
+<p class="section-desc">Transfer complete — Mac Mini shows green checkmark. ThinkPad still queued.</p>
+
+<div class="window" style="position:relative">
+  <div class="titlebar">
+    <div class="traffic-lights"><span class="tl-red"></span><span class="tl-yellow"></span><span class="tl-green"></span></div>
+    <div class="titlebar-center"><div class="titlebar-title">DevMesh</div></div>
+  </div>
+  <div class="app-body" style="position:relative">
+    <div class="sidebar" style="opacity:0.25">
+      <div class="sb-item sb-this-machine"><div style="flex:1"><span class="sb-label">MacBook Pro</span></div></div>
+    </div>
+    <div class="main" style="opacity:0.25"><div style="flex:1"></div></div>
+    <div class="meshdrop-overlay">
+      <div class="meshdrop-panel">
+        <div class="meshdrop-title">Sent!</div>
+        <div class="meshdrop-subtitle">3 files · 12.4 KB</div>
+
+        <div class="meshdrop-devices" style="margin-top:24px;">
+          <!-- Mac Mini - done -->
+          <div class="meshdrop-device done">
+            <div class="meshdrop-icon-circle" style="background:#ECFDF5;">
+              <svg viewBox="0 0 28 28" fill="none" stroke="#34C759" stroke-width="1.3"><rect x="4" y="4" width="20" height="14" rx="2.5"/><path d="M10 20h8"/><path d="M14 18v2"/></svg>
+              <div class="meshdrop-check">
+                <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2"><path d="M2.5 6l2.5 2.5 4.5-5"/></svg>
+              </div>
+            </div>
+            <span class="meshdrop-device-name" style="color:#34C759">Mac Mini</span>
+            <span class="meshdrop-device-status" style="color:#34C759">delivered ✓</span>
+          </div>
+
+          <!-- ThinkPad - queued -->
+          <div class="meshdrop-device">
+            <div class="meshdrop-icon-circle" style="opacity:0.5">
+              <svg viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.3"><rect x="4" y="5" width="20" height="16" rx="2.5"/><path d="M4 17h20"/></svg>
+            </div>
+            <span class="meshdrop-device-name">ThinkPad</span>
+            <span class="meshdrop-device-status" style="color:#FF9500">queued · offline</span>
+          </div>
+        </div>
+
+        <div class="meshdrop-hint" style="margin-top:20px;">Mac Mini received 3 files · ThinkPad will receive when online</div>
+      </div>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>

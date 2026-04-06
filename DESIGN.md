@@ -150,6 +150,26 @@ The user never sees tier numbers. They just select what to sync, the app figures
 
 Color coding in file browser: green (identical), yellow (differs), red (missing on one side). Click yellow for content diff. Known config files (.zshrc, .gitconfig, .claude/, .ssh/config) auto-expand content diff.
 
+### File Browser Actions
+
+Action paths available in the file browser:
+- **Context menu (right-click):** Open, Open With..., Copy Path, Reveal in Finder, Copy to [device], Delete, Rename, Get Info
+- **Drag-and-drop:** Drag file(s) to device in sidebar to copy
+- **Toolbar:** "Send to..." dropdown with paired device list
+- **Keyboard:** Cmd+C to copy reference, Cmd+V on another device's browser to paste
+- **Multi-select:** Shift+click range, Cmd+click individual, then any action applies to all
+
+### Diff View Actions
+
+Actions in the Machine Diff view:
+- **Per-row:** ← → directional sync arrows to copy in either direction
+- **Missing files:** inline "Copy to [device] →" button
+- **Bulk:** "Sync All →" / "← Sync All" buttons in toolbar
+- **Checkbox select:** Select multiple rows + "Sync Selected →"
+- **Right-click:** Copy to Left, Copy to Right, Ignore, Add to Package
+
+**Offline device in diff:** Shows cached directory listing with amber banner "Showing cached data from 2h ago. Sync unavailable until device reconnects." All cached views are read-only.
+
 ### Key Technical Decisions
 
 **iroh over Tailscale for P2P transport:**
@@ -192,18 +212,125 @@ apply_package(manifest) -> Result<ApplyReport>
 inventory() -> EnvironmentGraph
 ```
 
-**Security note:** All RPC calls are authenticated via the iroh Ed25519 keypair established during device pairing. Only paired devices can issue RPC commands. Write operations (`write_file`, `write_dir`, `apply_package`) require explicit per-session user confirmation on the receiving device for V1. Fine-grained capability scoping (e.g., read-only pairing, restricted directories) is deferred to Open Questions.
+**Security note:** All RPC calls are authenticated via the iroh Ed25519 keypair established during device pairing. Only paired devices can issue RPC commands. Write operations (`write_file`, `write_dir`, `apply_package`) require explicit per-session user confirmation on the receiving device for V1. Fine-grained capability scoping is handled by the Permission Model below (3-tier system with directory scoping).
+
+### Permission Model
+
+3-tier permission system for paired devices:
+
+| Tier | Name | Capabilities | Default |
+|------|------|-------------|---------|
+| 1 | Browse Only | See file listings, metadata, diffs | Default for new pairings |
+| 2 | Read + Copy | Tier 1 + copy files FROM this machine | Explicit upgrade |
+| 3 | Full Access | Tier 2 + write/modify files ON this machine | Explicit upgrade + per-action confirmation |
+
+Key rules:
+- Changes always apply to ONE machine (directional, not bidirectional sync)
+- Tier 3 write operations show a native OS confirmation on the receiving machine: "Mac Mini wants to write .zshrc. [Allow Once] [Allow Always for This Session] [Deny]"
+- Directory scoping: restrict access to specific directories within any tier
+- Instant revocation from Settings — remote device loses all access immediately
+- Permission tier visible as badge in sidebar: [Full] green, [Read+Copy] orange, [Browse] blue
+
+**Permission Grant data model:**
+```
+PermissionGrant {
+  peer_id: Ed25519PublicKey,
+  tier: Browse | ReadCopy | Full,
+  paths: Vec<PathScope>,      // empty = everything visible
+  expires_at: Option<u64>,    // unix timestamp, for temporary sharing
+  label: String,              // "personal", "work", "alice-collab"
+}
+```
+
+Enforcement is server-side at the RPC layer. Every `list_dir`, `read_file`, `write_file` call checks the peer's PermissionGrant: is this peer paired? Is this path in scope? Does their tier allow this operation? If any check fails, return `PermissionDenied`. The UI never constructs a request it can't make, but enforcement lives at the daemon regardless.
+
+**Labeled sidebar groups (not multi-network):** The `label` field on PermissionGrant enables client-side grouping in the sidebar without any protocol-level network concept. Labels are local-only. No workspace switching. No network overlay. Devices are grouped by label:
+```
+  Personal
+    Mac Mini          [online]  [Full]
+    ThinkPad          [offline] [Full]
+  Work
+    staging-server    [online]  [Read]
+    alice-macbook     [online]  [Browse]
+  Temp
+    bob-laptop        [expires in 22h]  [Read · ~/.claude/ only]
+```
+
+This solves personal, work, collaboration, and temporary sharing scenarios without the complexity of multiple networks. The decision: per-device permission scoping, not separate meshes. Inspired by Tailscale's pivot from multiple tailnets to ACL grants.
 
 **Connectivity and offline behavior:**
 - iroh includes relay nodes for NAT traversal fallback. If direct P2P fails (symmetric NAT, corporate firewall), traffic routes through iroh relay servers automatically.
 - When a remote machine is unreachable: device shows "offline" badge with last-seen timestamp. The app caches the most recent directory listing and environment graph, displayed with a staleness indicator ("last synced 3 hours ago"). Cached views are read-only — no sync/copy operations until connection restores.
 - Large file transfers: progress bar with pause/resume (iroh-blobs supports resumable). Warning prompt above 500MB ("This transfer is 2.3 GB. Proceed?").
 
+### Offline Transfer Queue
+
+iMessage-pattern queued transfers:
+- When a user copies a file to an offline device, DevMesh queues the intent
+- UI shows: "ThinkPad is offline. Queue transfer? It will complete automatically when ThinkPad connects."
+- SQLite table: `pending_transfers(id, source_device, target_device, source_path, target_path, created_at, status, completed_at)`
+- On reconnect: source device pushes queued blobs via iroh. Target device shows consent prompt.
+- Notification on completion: "Transfer to ThinkPad complete: 3 files synced."
+- Badge on device icon shows pending transfer count
+- Queued operations respect the same permission tier as live operations
+
+**Future (Horizon 2): Watched paths with diff-then-confirm.** User pins specific files as "keep identical." On reconnect, shows diff + one-click apply. Not auto-sync — a watched diff with manual trigger.
+
 **Device onboarding:**
 Both machines must have DevMesh installed. The agent daemon auto-installs on first launch. There is no "browse a machine that doesn't have the app" flow — both ends need the app running. A lightweight agent-only install (no GUI, CLI pairing) is a future option for headless servers.
 
+### Device Pairing UX
+
+Two-tier pairing system that replaces the original ticket-paste approach:
+
+**Tier 1: Same-Network Auto-Discovery (mDNS)**
+- Both devices on the same WiFi are discovered automatically via mDNS/Bonjour
+- Service type: `_devmesh._tcp.local.`
+- Zero user input required. Device appears in the pairing sheet within 2-3 seconds.
+- Both sides see a mutual approval dialog. Click "Allow" on both. Done.
+- Uses `mdns-sd` crate (pure Rust, no system deps)
+
+**Tier 2: Short PIN via Relay Rendezvous**
+- For cross-network pairing (different WiFi, home + office)
+- 6-digit PIN displayed as "482 · 916" (two groups of 3)
+- PIN is ephemeral (5-min TTL), single-use, registered with iroh relay
+- Device B enters PIN, relay matches them, connection established
+- No long ticket strings, no QR codes needed
+
+The user never thinks about which tier to use — the app tries mDNS first, and if the other device isn't found locally within a few seconds, it offers the PIN flow.
+
 **Semantic diff extensibility:**
 Semantic diff ships with built-in parsers for: `.zshrc`/`.bashrc` (detect frameworks, plugins, PATH entries), `.gitconfig` (sections), `package.json` (dependencies), `Brewfile` (packages). Parser interface is pluggable via a `DiffParser` trait — community can contribute parsers for new config types.
+
+### Graph Visualization Strategy
+
+Graphs used in exactly two places:
+
+**1. Capability Pack Dependency DAG**
+- Directed acyclic graph showing install dependencies for Tier 3 packs
+- Layout: dagre or elkjs (deterministic directed layout, NOT force-directed)
+- Interaction: hover node for details, click to expand sub-dependencies, red badges on failing nodes
+- Scalability: collapsible groups for large dependency sets (e.g., "47 packages" as one node)
+- Library: react-force-graph for canvas rendering, dagre for layout computation
+
+**2. Device Topology Widget**
+- Small floating sidebar widget showing paired device mesh (3-8 nodes)
+- Click node to navigate to that device
+- NOT a hero/full-screen view (too few nodes to justify the space)
+
+**NOT built as graphs:** environment dependency browsing (searchable tree view instead), config file relationships (indented list), diff view device indicator (header text, not floating widget).
+
+### Design Reference
+
+Visual design direction: **Neo Spatial**
+- macOS-native feel with modern touches (Sonoma-era Apple design language)
+- System fonts (-apple-system, SF Pro), frosted glass sidebar with backdrop-filter
+- SVG icons (not emoji), tight Finder-like density (22px rows)
+- Pulsing status dots for online devices, color-coded file type icons
+- System blue (#007AFF) as primary accent, Apple system colors for status
+- Alternating row backgrounds (#fff / #F9F9F9)
+- 0.5px hairline borders with low-opacity rgba
+- Design reference HTML: `devmesh-design-reference.html` in project root (7 screens)
 
 ## Open Questions
 
@@ -213,6 +340,7 @@ Semantic diff ships with built-in parsers for: `.zshrc`/`.bashrc` (detect framew
 4. **Environment agent scope** — how deep does the inventory go? Just installed CLI tools + configs? Or also GUI apps, fonts, system preferences? The deeper you go, the more OS-specific fragility.
 5. **Smart terminal architecture** — xterm.js frontend + pty backend in Rust, but how does it know context? Does it read the current file browser path? Does it auto-suggest commands based on what you're looking at?
 6. **Naming** — "DevMesh" is a working title. The product needs a name that communicates "your devices, unified" without sounding enterprise-y.
+7. **Multi-network mesh** — RESOLVED: Don't build separate networks. Use per-device PermissionGrant with client-side labels for sidebar grouping. Solves personal/work/collaboration/temporary scenarios without protocol complexity. See Permission Model section.
 
 ## Success Criteria
 
