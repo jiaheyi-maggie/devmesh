@@ -330,7 +330,43 @@ Visual design direction: **Neo Spatial**
 - System blue (#007AFF) as primary accent, Apple system colors for status
 - Alternating row backgrounds (#fff / #F9F9F9)
 - 0.5px hairline borders with low-opacity rgba
-- Design reference HTML: `devmesh-design-reference.html` in project root (7 screens)
+- Sidebar is mesh-first: your device (with pinned paths) → remote devices (with permission/status metadata) → Packs (collapsed). No "Favorites" section.
+- Design reference HTML: `devmesh-design-reference.html` in project root (18 screens)
+
+### MeshDrop (AirDrop Equivalent)
+
+Quick-share overlay for sending files to any device in the mesh. Triggered by ⌘⇧D, the "Send to..." toolbar button, or dragging files with no target.
+
+- Frosted glass overlay with device grid (circular icons, like AirDrop)
+- Online devices are clickable targets. Offline devices show "will queue" (integrates with offline transfer queue).
+- Devices with Browse Only permission are visible but grayed out (can't receive files).
+- Progress ring around device icon during transfer, checkmark on completion.
+- Drop zone for dragging additional files into the overlay.
+- Three states: ready (select target), sending (progress), complete (checkmark + queue status).
+
+### Sidebar Architecture
+
+The sidebar is organized around the mesh concept, not filesystem navigation:
+
+```
+● MacBook Pro (this machine)    ← Always first, explicit "this machine" label
+  ★ Home                        ← Pinned paths (user-configurable)
+  ★ Desktop
+  ★ .claude
+
+● Mac Mini                      ← Remote devices at same hierarchy level
+  studio · Full                    with inline permission + status metadata
+
+○ ThinkPad                 ⓶   ← Offline + pending transfer badge
+  travel · Read · 2h ago
+
+─────────────────────────       ← Thin divider
+▸ Packs              (3)       ← Collapsed by default, expands on pack screens
+─────────────────────────
++ Link Device
+```
+
+With labeled groups: your device first, then Personal/Work/Temp group headers with devices nested under each. No workspace switching, no multi-network protocol. Groups are client-side labels on PermissionGrant.
 
 ## Open Questions
 
