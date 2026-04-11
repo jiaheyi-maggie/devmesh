@@ -4,13 +4,15 @@
   "version": "0.1.0",
   "identifier": "com.maggieyi.devmesh",
   "build": {
-    "frontendDist": "../src"
+    "beforeDevCommand": "bun run dev",
+    "beforeBuildCommand": "bun run build",
+    "devUrl": "http://localhost:1420",
+    "frontendDist": "../dist"
   },
   "app": {
-    "withGlobalTauri": true,
     "windows": [
       {
-        "title": "devmesh",
+        "title": "DevMesh",
         "width": 800,
         "height": 600
       }
